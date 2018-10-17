@@ -1,4 +1,4 @@
-(use s)
+(use posix s)
 
 (define project-header #<#EOF
 (use srfi-69 easyffi)
@@ -363,16 +363,16 @@ EOF
 )
 (with-output-to-file "xlsxwriterscm.scm"
   (lambda()
-    (let* ((a                (process "chicken-wrap libxlsxwriter_layer.c -to-stdout"))
-           (a                (s-replace "\"uint8_t\""  "unsigned-byte" a))
-           (a                (s-replace "\"int8_t\""   "byte" a))
-           (a                (s-replace "\"uint\""     "unsigned-integer" a))
-           (a                (s-replace "\"uint16_t\"" "unsigned-short" a))
-           (a                (s-replace "\"uint32_t\"" "unsigned-integer32" a))
-           (a                (s-replace "\"int32_t\""  "integer32" a))
-           (a                (s-replace "\"ptrdiff_t\""  "integer" a))
-           (a                (s-join "\n" (read-lines a)))))
-    (printf project-header
-            a)))
+    (let* ((g (let* ((a (process "chicken-wrap libxlsxwriter_layer.c -to-stdout")))
+                (s-join "\n" (read-lines a))))
+           (g (s-replace "\"uint8_t\""  "unsigned-byte" g))
+           (g (s-replace "\"int8_t\""   "byte" g))
+           (g (s-replace "\"uint\""     "unsigned-integer" g))
+           (g (s-replace "\"uint16_t\"" "unsigned-short" g))
+           (g (s-replace "\"uint32_t\"" "unsigned-integer32" g))
+           (g (s-replace "\"int32_t\""  "integer32" g))
+           (g (s-replace "\"ptrdiff_t\""  "integer" g)))
+      (printf project-header
+              g))))
 (exit)
 

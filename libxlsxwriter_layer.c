@@ -295,7 +295,7 @@ void initCharts(ptrdiff_t allocateN)
 void initChartFonts(ptrdiff_t allocateN)
 {
   chartFontsCleanup();
-  chartFonts = callocl(allocateN, sizeof(lxw_chart_font));
+  chartFonts = calloc(allocateN, sizeof(lxw_chart_font));
   maxAllowedChartFonts = allocateN;
 }
 
@@ -1313,13 +1313,13 @@ void setBorderRight(uint8_t border)
     {printf("invalid border type set in set-border-top.");}
 }
 
-void setBGColor(uint32_t color)
+void setBgColor(uint32_t color)
 {
   if (formats)
     {format_set_bg_color(formats[formatIndex], color);}
 }
 
-void setFGColor(uint32_t color)
+void setFgColor(uint32_t color)
 {
   if (formats)
     {format_set_fg_color(formats[formatIndex], color);}
@@ -1868,7 +1868,7 @@ void chartYAxisSetNameRange(char* sheetName,
     {
       chart_axis_set_name_range(charts[chartIndex]->y_axis,
 				sheetName,
-				row,
+	 			row,
 				col);
     }
 }
@@ -1947,14 +1947,14 @@ void chartXAxisSetPattern()
 {
   if (charts &&
       chartPatterns)
-    {chart_axis_set_fill(charts[chartIndex]->x_axis, &chartPatterns[chartPatternIndex]);}
+    {chart_axis_set_pattern(charts[chartIndex]->x_axis, &chartPatterns[chartPatternIndex]);}
 }
 
 void chartYAxisSetPattern()
 {
   if (charts &&
       chartPatterns)
-    {chart_axis_set_fill(charts[chartIndex]->y_axis, &chartPatterns[chartPatternIndex]);}
+    {chart_axis_set_pattern(charts[chartIndex]->y_axis, &chartPatterns[chartPatternIndex]);}
 }
 
 void chartReverseXAxis()
@@ -1980,6 +1980,8 @@ void chartYAxisSetCrossing(double val)
   if (charts)
     {chart_axis_set_crossing(charts[chartIndex]->y_axis, val);}
 }
+
+
 
 void chartXAxisSetCrossingMax()
 {
@@ -2047,16 +2049,16 @@ void chartXAxisSetMin(double min)
     {chart_axis_set_min(charts[chartIndex]->x_axis, min);}
 }
 
-void chartXAxisSetMax(double max)
-{
-  if (charts)
-    {chart_axis_set_max(charts[chartIndex]->x_axis, max);}
-}
-
 void chartYAxisSetMin(double min)
 {
   if (charts)
     {chart_axis_set_min(charts[chartIndex]->y_axis, min);}
+}
+
+void chartXAxisSetMax(double max)
+{
+  if (charts)
+    {chart_axis_set_max(charts[chartIndex]->x_axis, max);}
 }
 
 void chartYAxisSetMax(double max)
@@ -2077,28 +2079,28 @@ void chartYAxisSetLogBase(uint16_t logBase)
     {chart_axis_set_log_base(charts[chartIndex]->y_axis, logBase);}
 }
 
-void chartXAxisSetMajorTickPoint(uint8_t ty)
+void chartXAxisSetMajorTickMark(uint8_t ty)
 {
   if (charts)
-    {chart_axis_set_major_tick_point(charts[chartIndex]->x_axis, ty);}
+    {chart_axis_set_major_tick_mark(charts[chartIndex]->x_axis, ty);}
 }
 
-void chartYAxisSetMajorTickPoint(uint8_t ty)
+void chartYAxisSetMajorTickMark(uint8_t ty)
 {
   if (charts)
-    {chart_axis_set_major_tick_point(charts[chartIndex]->y_axis, ty);}
+    {chart_axis_set_major_tick_mark(charts[chartIndex]->y_axis, ty);}
 }
 
-void chartXAxisSetMinorTickPoint(uint8_t ty)
+void chartXAxisSetMinorTickMark(uint8_t ty)
 {
   if (charts)
-    {chart_axis_set_minor_tick_point(charts[chartIndex]->x_axis, ty);}
+    {chart_axis_set_minor_tick_mark(charts[chartIndex]->x_axis, ty);}
 }
 
-void chartYAxisSetMinorTickPoint(uint8_t ty)
+void chartYAxisSetMinorTickMark(uint8_t ty)
 {
   if (charts)
-    {chart_axis_set_minor_tick_point(charts[chartIndex]->y_axis, ty);}
+    {chart_axis_set_minor_tick_mark(charts[chartIndex]->y_axis, ty);}
 }
 
 void chartXAxisSetIntervalUnit(uint16_t unit)
@@ -2113,16 +2115,16 @@ void chartYAxisSetIntervalUnit(uint16_t unit)
     {chart_axis_set_interval_unit(charts[chartIndex]->y_axis, unit);}
 }
 
-void chartXAxisSetIntervalUnitTick(uint16_t unit)
+void chartXAxisSetIntervalTick(uint16_t unit)
 {
   if (charts)
-    {chart_axis_set_interval_unit_tick(charts[chartIndex]->x_axis, unit);}
+    {chart_axis_set_interval_tick(charts[chartIndex]->x_axis, unit);}
 }
 
-void chartYAxisSetIntervalUnitTick(uint16_t unit)
+void chartYAxisSetIntervalTick(uint16_t unit)
 {
   if (charts)
-    {chart_axis_set_interval_unit_tick(charts[chartIndex]->y_axis, unit);}
+    {chart_axis_set_interval_tick(charts[chartIndex]->y_axis, unit);}
 }
 
 void chartXAxisSetMajorUnit(double unit)
@@ -2226,13 +2228,256 @@ void chartYAxisSetMinorGridlinesSetLine()
     {chart_axis_set_minor_gridlines_set_line(charts[chartIndex]->y_axis, &chartLines[chartLineIndex]);}
 }
 
+void chartTitleSetName(char* name)
+{
+  if (charts)
+    {chart_title_set_name(charts[chartIndex], name);}
+}
+
+void chartTitleSetNameRange(char* sheetName,
+			    uint32_t row,
+			    unsigned short col)
+{
+  if (charts)
+    {
+      chart_title_set_name_range(charts[chartIndex],
+				 sheetName,
+				 row,
+				 col);
+    }
+}
+
+void chartTitleSetNameFont()
+{
+  if (charts &&
+      chartFonts)
+    {chart_title_set_name_font(charts[chartIndex], &chartFonts[chartFontIndex]);}
+}
+
+void chartTitleOff()
+{
+  if (charts)
+    {chart_title_off(charts[chartIndex]);}
+}
+
+void chartLegendSetPosition(uint8_t pos)
+{
+  if (charts)
+    {chart_title_set_position(charts[chartIndex], pos);}
+}
+
+void chartLegendSetFont()
+{
+  if (charts &&
+      chartFonts)
+    {chart_legend_set_font(charts[chartIndex], &chartFonts[chartFontIndex]);}
+}
+
+void addChartLegendSeriesToDelete(uint16_t series)
+{
+  if (!deleteSeries)
+    {deleteSeries = calloc(100, sizeof(uint16_t));}
+  if (deleteSeriesCount < 100)
+    {*(deleteSeries + deleteSeriesCount++) = series;}
+  else
+    {chartLegendDeleteSeries();}
+}
+ 
+void chartLegendDeleteSeries()
+{
+  if (charts &&
+      deleteSeries)
+    {
+      chart_legend_delete_series(series[seriesIndex], &deleteSeries);
+      free(deleteSeries);
+    }
+}
+
+void chartAreaSetLine()
+{
+  if (charts &&
+      chartLines)
+    {chart_chartarea_set_line(charts[chartIndex], &chartLines[chartLineIndex]);}
+}
+
+void chartAreaSetFill()
+{
+  if (charts &&
+      chartFills)
+    {chart_chartarea_set_fill(charts[chartIndex], &chartFills[chartFillIndex]);}
+}
+
+void chartAreaSetPattern()
+{
+  if (charts &&
+      chartPatterns)
+    {chart_chartarea_set_pattern(charts[chartIndex], &chartPatterns[chartPatternIndex]);}
+}
+
+void chartPlotAreaSetLine()
+{
+  if (charts &&
+      chartLines)
+    {chart_plotarea_set_line(charts[chartIndex], &chartLines[chartLineIndex]);}
+}
+
+void chartPlotAreaSetFill()
+{
+  if (charts &&
+      chartFills)
+    {chart_plotarea_set_fill(charts[chartIndex], &chartFills[chartFillIndex]);}
+}
+
+void chartPlotAreaSetPattern()
+{
+  if (charts &&
+      chartPatterns)
+    {chart_plotarea_set_pattern(charts[chartIndex], &chartPatterns[chartPatternIndex]);}
+}
+
+
+void chartSetStyle(uint8_t styleID)
+{
+  if (charts)
+    {chart_set_style(charts[chartIndex],styleID);}
+}
+
+void chartSetTable()
+{
+  if (charts)
+    {chart_set_table(charts[chartIndex]);}
+}
+
+void chartSetTableGrid(uint8_t horizontal,
+		       uint8_t vertical,
+		       uint8_t outline,
+		       uint8_t legendKeys)
+{
+  if (charts)
+    {
+      chart_set_table_grid(charts[chartIndex],
+			   horizontal,
+			   vertical,
+			   outline,
+			   legendKeys);
+    }
+}
+
+void chartSetUpDownBars()
+{
+  if (charts)
+    {chart_set_up_down_bars(charts[chartIndex]);}
+}
+
+void chartSetUpBarsLineAndFill()
+{
+  if (chartLines &&
+      chartFills)
+    {
+      downBarLine = &chartLines[chartLineIndex];
+      downBarFill = &chartFills[chartFillIndex];
+      if (upBarLine &&
+	  upBarFill)
+	{
+	  chart_set_up_down_bars_format(charts[chartIndex],
+					&upBarLine,
+					&upBarFill,
+					&downBarLine,
+					&downBarFill);
+	}
+    }
+  
+}
+
+
+void chartSetDownBarsLineAndFill()
+{
+  if (chartLines &&
+      chartFills)
+    {
+      upBarLine = &chartLines[chartLineIndex];
+      upBarFill = &chartFills[chartFillIndex];
+      if (downBarLine &&
+	  downBarFill)
+	{
+	  chart_set_up_down_bars_format(charts[chartIndex],
+					&upBarLine,
+					&upBarFill,
+					&downBarLine,
+					&downBarFill);
+	}
+    }
+}
+
+void chartSetDropLines()
+{
+  if (charts &&
+      chartLines)
+    {chart_set_drop_lines(charts[chartIndex], &chartLines[chartLineIndex]);}
+}
+
+void chartSetHighLowLines()
+{
+  if (charts &&
+      chartLines)
+    {chart_set_high_low_lines(charts[chartIndex], &chartLines[chartLineIndex]);}
+}
+
+void chartSetSeriesOverlap(uint8_t overlap)
+{
+  if (charts)
+    {chart_set_series_overlap(charts[chartIndex], overlap);}
+}
+
+void chartSetSeriesGap(uint16_t gap)
+{
+  if (charts)
+    {chart_set_series_gap(charts[chartIndex], gap);}
+}
+
+void chartShowBlanksAs(uint8_t option)
+{
+  if (charts)
+    {chart_show_blanks_as(charts[chartIndex], option);}
+}
+
+void chartShowHiddenData()
+{
+  if (charts)
+    {chart_show_hidden_data(charts[chartIndex]);}
+}
+
+void chartSetRotation(uint16_t rotation)
+{
+  if (charts)
+    {chart_set_rotation(charts[chartIndex], rotation);}
+}
+
+void chartSetHoleSize(uint8_t size)
+{
+  if (charts)
+    {chart_set_size(charts[chartIndex], size);}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 void chartSeriesSetNameRange(char* sheetName,
 			     uint32_t row,
 			     unsigned short col)
 {
   if (series)
     {
-      chart_series_set_name_range(series[chartIndex],
+      chart_series_set_name_range(series[seriesIndex],
 				  sheetName,
 				  row,
 				  col);
@@ -2263,6 +2508,7 @@ void chartYAxisSetCrossingOff()
   if (charts)
     {chart_axis_set_crossing_off(charts[chartIndex]->y_axis);}
 }
+
 
 
 

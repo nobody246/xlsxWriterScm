@@ -1,5 +1,6 @@
 lxw_workbook*         workbook;
 lxw_worksheet*        worksheet;
+lxw_chartsheet*       chartsheet;
 uint32_t              row = 0;
 unsigned short        col = 0;
 

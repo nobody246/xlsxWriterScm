@@ -5,12 +5,23 @@
   'xlsxwriterscm
   (list)
   '((close-workbook . xlsxwriterscm#close-workbook)
-    (chart-y-axis-set-crossing-off
-      .
-      xlsxwriterscm#chart-y-axis-set-crossing-off)
-    (chart-x-axis-set-crossing-off
-      .
-      xlsxwriterscm#chart-x-axis-set-crossing-off)
+    (chartsheet-set-footer-opt . xlsxwriterscm#chartsheet-set-footer-opt)
+    (chartsheet-set-header-opt . xlsxwriterscm#chartsheet-set-header-opt)
+    (chartsheet-set-footer . xlsxwriterscm#chartsheet-set-footer)
+    (chartsheet-set-header . xlsxwriterscm#chartsheet-set-header)
+    (chartsheet-set-margins . xlsxwriterscm#chartsheet-set-margins)
+    (chartsheet-set-paper . xlsxwriterscm#chartsheet-set-paper)
+    (chartsheet-set-portrait . xlsxwriterscm#chartsheet-set-portrait)
+    (chartsheet-set-landscape . xlsxwriterscm#chartsheet-set-landscape)
+    (chartsheet-set-zoom . xlsxwriterscm#chartsheet-set-zoom)
+    (chartsheet-protect . xlsxwriterscm#chartsheet-protect)
+    (chartsheet-set-tab-color . xlsxwriterscm#chartsheet-set-tab-color)
+    (chartsheet-set-first-sheet . xlsxwriterscm#chartsheet-set-first-sheet)
+    (chartsheet-hide . xlsxwriterscm#chartsheet-hide)
+    (chartsheet-select . xlsxwriterscm#chartsheet-select)
+    (chartsheet-activate . xlsxwriterscm#chartsheet-activate)
+    (chartsheet-set-chart . xlsxwriterscm#chartsheet-set-chart)
+    (create-chartsheet . xlsxwriterscm#create-chartsheet)
     (chart-y-axis-set-reverse . xlsxwriterscm#chart-y-axis-set-reverse)
     (chart-x-axis-set-reverse . xlsxwriterscm#chart-x-axis-set-reverse)
     (chart-series-set-name-range . xlsxwriterscm#chart-series-set-name-range)

@@ -2497,18 +2497,6 @@ void chartYAxisSetReverse()
 }
 
 
-void chartXAxisSetCrossingOff()
-{
-  if (charts)
-    {chart_axis_set_crossing_off(charts[chartIndex]->x_axis);}
-}
-
-void chartYAxisSetCrossingOff()
-{
-  if (charts)
-    {chart_axis_set_crossing_off(charts[chartIndex]->y_axis);}
-}
-
 
 
 

@@ -371,26 +371,27 @@ EOF
         (in-scheme-code #t))
     (s-join
      "\n"
-     (map (lambda(x)
-            (let ((z (string->list x))
-                  (new-list '()))
-              (for-each
-               (lambda(d)
-                 (when (eq? d #\")
-                   (set! in-scheme-code (not in-scheme-code)))
-                 (if (and
-                      in-scheme-code
-                      (char-upper-case? d))
-                     (set! new-list
-                       (append new-list
-                               '(#\-)
-                               `(,(char-downcase d))))
-                     (set! new-list
-                       (append new-list
-                               `(,d)))))
-               z)
-              (list->string new-list)))
-          l))))
+     (map
+      (lambda(x)
+        (let ((z (string->list x))
+              (new-list '()))
+          (for-each
+           (lambda(d)
+             (when (eq? d #\")
+               (set! in-scheme-code (not in-scheme-code)))
+             (if (and
+                  in-scheme-code
+                  (char-upper-case? d))
+                 (set! new-list
+                   (append new-list
+                           '(#\-)
+                           `(,(char-downcase d))))
+                 (set! new-list
+                   (append new-list
+                           `(,d)))))
+           z)
+          (list->string new-list)))
+      l))))
 ;(read-lines-and-format wrap-process)
 ;(exit)
 (with-output-to-file "xlsxwriterscm.scm"

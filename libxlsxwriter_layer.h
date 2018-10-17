@@ -69,3 +69,11 @@ char* errorStr;
 
 unsigned short gridLineXAxisShow = 0;
 unsigned short gridLineYAxisShow = 0;
+
+uint16_t* deleteSeries;
+ptrdiff_t deleteSeriesCount;
+
+lxw_chart_line*  upBarLine;
+lxw_chart_fill*  upBarFill;
+lxw_chart_line*  downBarLine;
+lxw_chart_fill*  downBarFill;

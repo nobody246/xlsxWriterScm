@@ -361,10 +361,41 @@
   ~A]
 EOF
 )
+
+(define wrap-process 
+  (process "chicken-wrap libxlsxwriter_layer.c -to-stdout"))
+
+;replace c notation with 
+(define (read-lines-and-format y)
+  (let ((l (read-lines y))
+        (in-scheme-code #t))
+    (s-join
+     "\n"
+     (map (lambda(x)
+            (let ((z (string->list x))
+                  (new-list '()))
+              (for-each
+               (lambda(d)
+                 (when (eq? d #\")
+                   (set! in-scheme-code (not in-scheme-code)))
+                 (if (and
+                      in-scheme-code
+                      (char-upper-case? d))
+                     (set! new-list
+                       (append new-list
+                               '(#\-)
+                               `(,(char-downcase d))))
+                     (set! new-list
+                       (append new-list
+                               `(,d)))))
+               z)
+              (list->string new-list)))
+          l))))
+;(read-lines-and-format wrap-process)
+;(exit)
 (with-output-to-file "xlsxwriterscm.scm"
   (lambda()
-    (let* ((g (let* ((a (process "chicken-wrap libxlsxwriter_layer.c -to-stdout")))
-                (s-join "\n" (read-lines a))))
+    (let* ((g (read-lines-and-format wrap-process))
            (g (s-replace "\"uint8_t\""  "unsigned-byte" g))
            (g (s-replace "\"int8_t\""   "byte" g))
            (g (s-replace "\"uint\""     "unsigned-integer" g))

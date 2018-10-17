@@ -392,8 +392,7 @@ EOF
            z)
           (list->string new-list)))
       l))))
-;(read-lines-and-format wrap-process)
-;(exit)
+
 (with-output-to-file "xlsxwriterscm.scm"
   (lambda()
     (let* ((g (read-lines-and-format wrap-process))

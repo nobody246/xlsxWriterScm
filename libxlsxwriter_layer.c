@@ -2459,18 +2459,6 @@ void chartSetHoleSize(uint8_t size)
     {chart_set_size(charts[chartIndex], size);}
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
 void chartSeriesSetNameRange(char* sheetName,
 			     uint32_t row,
 			     unsigned short col)
@@ -2497,11 +2485,178 @@ void chartYAxisSetReverse()
 }
 
 
+void createChartsheet(char* sheetName)
+{
+  if (workbook)
+    {
+      const char* s = sheetName;
+      chartsheet = workbook_add_chartsheet(workbook, s);
+    }
+}
+
+void chartsheetSetChart()
+{
+  if (charts &&
+      chartsheet)
+    {chartsheet_set_chart(charts[chartIndex], chartsheet);}
+}
 
 
+void chartsheetActivate()
+{
+  if (chartsheet)
+    {chartsheet_activate(chartsheet);}
+}
+
+void chartsheetSelect()
+{
+  if (chartsheet)
+    {chartsheet_select(chartsheet);}
+}
+
+void chartsheetHide()
+{
+  if (chartsheet)
+    {chartsheet_hide(chartsheet);}
+}
+
+void chartsheetSetFirstSheet()
+{
+  if (chartsheet)
+    {chartsheet_set_first_sheet(chartsheet);}
+}
+
+void chartsheetSetTabColor(uint32_t color)
+{
+  if (chartsheet)
+    {chartsheet_set_tab_color(chartsheet, color);}
+}
+
+void chartsheetProtect(char* pswd,
+		       uint8_t 	no_select_locked_cells,
+ 		       uint8_t 	no_select_unlocked_cells,
+ 		       uint8_t 	format_cells,
+ 		       uint8_t 	format_columns,
+ 		       uint8_t 	format_rows,
+ 		       uint8_t 	insert_columns,
+ 		       uint8_t 	insert_rows,
+ 		       uint8_t 	insert_hyperlinks,
+ 		       uint8_t 	delete_columns,
+ 		       uint8_t 	delete_rows,
+ 		       uint8_t 	sort,
+ 		       uint8_t 	autofilter,
+ 		       uint8_t 	pivot_tables,
+ 		       uint8_t 	scenarios,
+ 		       uint8_t 	objects,
+ 		       uint8_t 	no_content,
+ 		       uint8_t 	no_objects)
+{
+  if (chartsheet)
+    {
+      lxw_protection o = (lxw_protection)
+	{.no_select_locked_cells = no_select_locked_cells,
+	 .no_select_unlocked_cells = no_select_unlocked_cells,
+	 .format_cells = format_cells,
+	 .format_columns = format_columns,
+	 .format_rows = format_rows,
+	 .insert_columns = insert_columns,
+	 .insert_rows = insert_rows,
+	 .insert_hyperlinks = insert_hyperlinks,
+	 .delete_columns = delete_columns,
+	 .delete_rows = delete_rows,
+	 .sort = sort,
+	 .autofilter = autofilter,
+	 .pivot_tables = pivot_tables,
+	 .scenarios = scenarios,
+	 .objects = objects,
+	 .no_content = no_content,
+	 .no_objects = no_objects};
+      const char* x = pswd;
+      chartsheet_protect(chartsheet, x, &o);
+    }
+}
+
+void chartsheetSetZoom(uint16_t scale)
+{
+  if (chartsheet)
+    {chartsheet_set_zoom(chartsheet, scale);}
+}
+
+void chartsheetSetLandscape()
+{
+  if (chartsheet)
+    {chartsheet_set_landscape(chartsheet);}
+}
+
+void chartsheetSetPortrait()
+{
+  if (chartsheet)
+    {chartsheet_set_portrait(chartsheet);}
+}
+
+void chartsheetSetPaper(uint8_t paperType)
+{
+  if (chartsheet)
+    {chartsheet_set_paper(chartsheet, paperType);}
+}
+
+void chartsheetSetMargins(double left,
+			  double right,
+			  double top,
+			  double bottom)
+{
+  if (chartsheet)
+    {
+      chartsheet_set_margins(chartsheet,
+			     left,
+			     right,
+			     top,
+			     bottom);
+    }
+}
+
+void chartsheetSetHeader(char* headerStr)
+{
+  if (chartsheet)
+    {
+      const char* s = headerStr;
+      handleLXWError(chartsheet_set_header(chartsheet, s),
+		     "chartsheet-set-header");
+    }
+}
+
+void chartsheetSetFooter(char* footerStr)
+{
+  if (chartsheet)
+    {
+      const char* s = footerStr;
+      handleLXWError(chartsheet_set_footer(chartsheet, s),
+		     "chartsheet-set-header");
+    }
+}
 
 
+void chartsheetSetHeaderOpt(char* headerStr, double margin)
+{
+  if (chartsheet)
+    {
+      lxw_header_footer_options o = (lxw_header_footer_options){.margin = margin};
+      const char* s = headerStr;
+      handleLXWError(chartsheet_set_header_opt(chartsheet, s, &o),
+		     "chartsheet-set-header-opt");      
+    }
+}
 
+void chartsheetSetFooterOpt(char* footerStr, double margin)
+{
+  if (chartsheet)
+    {
+      lxw_header_footer_options o = (lxw_header_footer_options){.margin = margin};
+      const char* s = footerStr;
+      handleLXWError(chartsheet_set_footer_opt(chartsheet, s, &o),
+		     "chartsheet-set-footer-opt");      
+    }
+}
 
 void closeWorkbook()
 {

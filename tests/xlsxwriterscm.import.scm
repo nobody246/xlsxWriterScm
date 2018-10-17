@@ -342,7 +342,7 @@
     (worksheet-set-row . xlsxwriterscm#worksheet-set-row)
     (worksheet-write-blank . xlsxwriterscm#worksheet-write-blank)
     (worksheet-write-boolean . xlsxwriterscm#worksheet-write-boolean)
-    (worksheet-write-u-r-l . xlsxwriterscm#worksheet-write-u-r-l)
+    (worksheet-write-url . xlsxwriterscm#worksheet-write-url)
     (worksheet-write-datetime . xlsxwriterscm#worksheet-write-datetime)
     (worksheet-write-array-formula
       .

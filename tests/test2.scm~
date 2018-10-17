@@ -1,0 +1,6 @@
+(use xlsxwriter)
+(create-workbook "test2.xlsx")
+(define expenses '((Rent . 1000)
+                   (Gas  . 100)
+                   (Food . 300)
+                   (Gym  . 50)))

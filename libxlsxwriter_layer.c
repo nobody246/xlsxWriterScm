@@ -684,9 +684,8 @@ void worksheetWriteNumber(float value)
     }
 }
 
-void worksheetWriteFormula(char* formula,
-			   uint32_t row,
-			   unsigned short col)
+
+void worksheetWriteFormula(char* formula)
 {
   if (worksheet)
     {
@@ -727,9 +726,7 @@ void worksheetWriteDatetime(int year,
 			    int day,
 			    int hour,
 			    int mn,
-			    double sec,
-			    uint32_t row,
-			    unsigned short col)
+			    double sec)
 {
   if (worksheet)
     {
@@ -743,9 +740,7 @@ void worksheetWriteDatetime(int year,
 }
 
 
-void worksheetWriteURL(char* url,
-		       uint32_t row,
-		       unsigned short col)
+void worksheetWriteUrl(char* url)
 {
   if (worksheet)
     {
@@ -757,9 +752,7 @@ void worksheetWriteURL(char* url,
     }
 }
 
-void worksheetWriteBoolean(short value,
-			   uint32_t row,
-			   unsigned short col)
+void worksheetWriteBoolean(short value)
 {
   if (worksheet)
     {
@@ -771,8 +764,7 @@ void worksheetWriteBoolean(short value,
     }
 }
 
-void worksheetWriteBlank(uint32_t row,
-			 unsigned short col)
+void worksheetWriteBlank()
 {
   if (worksheet)
     {
@@ -858,9 +850,7 @@ void worksheetSetColumnOpt(unsigned char hidden,
 }
 
 
-void worksheetInsertImage(char* filename,
-			  uint32_t row,
-			  unsigned short col)
+void worksheetInsertImage(char* filename)
 {
   if (worksheet)
     {
@@ -874,9 +864,7 @@ void worksheetInsertImageOpt(int x_offset,
 			     int y_offset,
 			     double x_scale,
 			     double y_scale,
-			     char* filename,
-			     uint32_t row,
-			     unsigned short col)
+			     char* filename)
 {
   if (worksheet)
     {
@@ -894,8 +882,7 @@ void worksheetInsertImageOpt(int x_offset,
 }
 
 
-void worksheetInsertChart(uint32_t row,
-			  unsigned short col)
+void worksheetInsertChart()
 {
   if (worksheet
       && charts)
@@ -905,9 +892,7 @@ void worksheetInsertChart(uint32_t row,
 void worksheetInsertChartOpt(int x_offset,
 			     int y_offset,
 			     int x_scale,
-			     int y_scale,
-			     uint32_t row,
-			     unsigned short col)
+			     int y_scale)
 {
   if (worksheet
       && charts)
@@ -957,8 +942,7 @@ void worksheetAutoFilter(uint32_t stRow,
     }
 }
 
-void worksheetDataValidationCell(uint32_t row,
-				 unsigned short col)
+void worksheetDataValidationCell()
 {
   if (worksheet 
       && (dataValidationIndex < dataValidationCount))
@@ -1847,9 +1831,7 @@ void chartYAxisSetName(char* name)
     {chart_axis_set_name(charts[chartIndex]->y_axis, name);}
 }
 
-void chartXAxisSetNameRange(char* sheetName,
-			    uint32_t row,
-			    unsigned short col)
+void chartXAxisSetNameRange(char* sheetName)
 {
   if (charts)
     {
@@ -1860,9 +1842,7 @@ void chartXAxisSetNameRange(char* sheetName,
     }
 }
 
-void chartYAxisSetNameRange(char* sheetName,
-			    uint32_t row,
-			    unsigned short col)
+void chartYAxisSetNameRange(char* sheetName)
 {
   if (charts)
     {
@@ -2234,9 +2214,7 @@ void chartTitleSetName(char* name)
     {chart_title_set_name(charts[chartIndex], name);}
 }
 
-void chartTitleSetNameRange(char* sheetName,
-			    uint32_t row,
-			    unsigned short col)
+void chartTitleSetNameRange(char* sheetName)
 {
   if (charts)
     {
@@ -2459,9 +2437,7 @@ void chartSetHoleSize(uint8_t size)
     {chart_set_size(charts[chartIndex], size);}
 }
 
-void chartSeriesSetNameRange(char* sheetName,
-			     uint32_t row,
-			     unsigned short col)
+void chartSeriesSetNameRange(char* sheetName)
 {
   if (series)
     {
@@ -2657,6 +2633,8 @@ void chartsheetSetFooterOpt(char* footerStr, double margin)
 		     "chartsheet-set-footer-opt");      
     }
 }
+
+
 
 void closeWorkbook()
 {

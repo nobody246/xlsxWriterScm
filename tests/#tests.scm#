@@ -5,8 +5,8 @@
 (add-worksheet "foo worksheet")
 (set-row 1)
 (set-col 1)
-(create-format)
-(set-pattern ($pattern 'dark-trellis))
+(create-format
+ (set-pattern ($pattern 'dark-trellis)))
 (set-font-color #xFFFFFF)
 (worksheet-write-string "bar")
 (add-worksheet "asdf..")

@@ -358,14 +358,17 @@
       (($axis-type body)
        (alist-ref body axis-type))))
   
-  ~A]
+  ~A
+
+  (include "libxlsxwriter_helper.scm")
+  ]
 EOF
 )
 
 (define wrap-process 
   (process "chicken-wrap libxlsxwriter_layer.c -to-stdout"))
 
-;replace c notation with 
+;replace c notation with scheme notation
 (define (read-lines-and-format y)
   (let ((l (read-lines y))
         (in-scheme-code #t))

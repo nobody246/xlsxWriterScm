@@ -2690,9 +2690,6 @@ void richStringsCleanup()
   maxAllowedRS = 0;
 }
 
-void debugRS()
-{}
-
 void closeWorkbook()
 {
   if (workbook)

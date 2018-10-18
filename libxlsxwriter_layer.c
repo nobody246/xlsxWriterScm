@@ -2634,7 +2634,64 @@ void chartsheetSetFooterOpt(char* footerStr, double margin)
     }
 }
 
+void initRichStrings(ptrdiff_t allocateN)
+{
+  rs = calloc(allocateN, sizeof(char*));
+  rsFormatIndice = calloc(allocateN, sizeof(ptrdiff_t));
+  maxAllowedRS = allocateN;
+  rsCount = 0;
+}
 
+void createRichStringChunk(char* stringChunk)
+{
+  if (rs &&
+      rsCount < maxAllowedRS)
+    {
+      *(rs + rsCount) = stringChunk;
+      *(rsFormatIndice + rsCount) = formatIndex;
+      rsCount++;
+    }
+  else
+    {printf("error in create-rich-string-chunk trying to use more rich strings than allocated");}
+}
+
+void worksheetWriteRichString()
+{
+  if (rsCount < 2)
+    {
+      printf("error worksheet-write-string not enough rich string segments.");
+      return;
+    }
+  rsChunkHolder = calloc(rsCount, sizeof(lxw_rich_string_tuple*));
+  rsChunks = calloc(rsCount, sizeof(lxw_rich_string_tuple));
+  ptrdiff_t i;
+  for (i = 0; i<rsCount; i++)
+    {
+      *(rsChunks + i) =
+	(lxw_rich_string_tuple)
+	{.format = formats[rsFormatIndice[i]],
+	 .string = rs[i]};
+      *(rsChunkHolder + i) = &rsChunks[i];
+    }
+  worksheet_write_rich_string(worksheet, row, col, rsChunkHolder, formats[formatIndex]);
+}
+
+void richStringsCleanup()
+{
+  if (rs)
+    {free(rs);}
+  if (rsFormatIndice)
+    {free(rsFormatIndice);}
+  if (rsChunkHolder)
+    {free(rsChunkHolder);}
+  if (rsChunks)
+    {free(rsChunks);}
+  rsCount = 0;
+  maxAllowedRS = 0;
+}
+
+void debugRS()
+{}
 
 void closeWorkbook()
 {
@@ -2653,6 +2710,7 @@ void closeWorkbook()
   seriesCleanup();
   seriesErrorBarsCleanup();
   chartsCleanup();
+  richStringsCleanup();
 }
 
 

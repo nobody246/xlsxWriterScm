@@ -78,3 +78,10 @@ lxw_chart_line*  upBarLine;
 lxw_chart_fill*  upBarFill;
 lxw_chart_line*  downBarLine;
 lxw_chart_fill*  downBarFill;
+
+char** rs;
+ptrdiff_t* rsFormatIndice;
+lxw_rich_string_tuple** rsChunkHolder;
+lxw_rich_string_tuple* rsChunks;
+ptrdiff_t maxAllowedRS;
+ptrdiff_t rsCount;

@@ -2442,18 +2442,13 @@ void richStringListCleanup()
 
 void worksheetWriteRichString()
 {
-  if (!richStringCount)
-    {richStringCount = 0;}
   if (!worksheet)
     {return;}
+  if (!richStringCount)
+    {initRichStringList(1);}  
   if (richStringFragmentCount < 2)
     {
       printf("worksheet-write-rich-string error, rich string needs more than 1 fragment.");
-      return;
-    }
-  if (!richStringList)
-    {
-      printf("worksheet-write-rich-string error, initialize rich string list first.");
       return;
     }
   if (richStringCount >= maxAllowedRichStrings)

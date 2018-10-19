@@ -54,28 +54,8 @@ void chartPointsCleanup()
 
 void chartFillsCleanup()
 {
-  if (chartFillCount)
-    {
-      int i, x;
-      for (i = 0; i < chartFillCount; i++)
-	{
-	  lxw_chart_fill* f = &chartFills[i];
-	  if (!f) continue;              
-	  for (x = 0; x < chartPointCount; x++)
-	    {
-	      lxw_chart_point* p = &chartPoints[x];
-	      if (p->fill == f)
-                {
-                  printf("Chart fill # %d is referenced in chart point objects, to free chart fills, "
-                         "free the chart point objects (chart-points-cleanup) first, and call "
-                         "(chart-fills-cleanup) again.\n",
-                         i);
-                  return;
-                }
-	    }
-	}
-      free(chartFills);
-    }
+  if (chartFills)
+    {free(chartFills);}
   maxAllowedChartFills = 0;
   chartFillCount = 0;
   chartFillIndex = 0;
@@ -83,25 +63,7 @@ void chartFillsCleanup()
      
 void chartPatternsCleanup()
 {
-  int i, x;
-  for (i = 0; i < chartPatternCount; i++)
-    {
-      lxw_chart_pattern* pt = &chartPatterns[i];
-      if (!pt) continue;
-      for (x = 0; x < chartPointCount; x++)
-	{
-	  lxw_chart_point* p = &chartPoints[x];
-	  if (p->pattern == pt)
-	    {
-	      printf("Chart pattern # %d is referenced in chart point objects, to free chart patterns, "
-                     "free the chart point objects (chart-points-cleanup) first, and call "
-                     "(chart-patterns-cleanup) again.\n",
-		     i);
-	      return;
-	    }
-	}
-    }
-  if (chartPatternCount)
+  if (chartPatterns)
     {free(chartPatterns);}
   maxAllowedChartPatterns = 0;
   chartPatternCount = 0;
@@ -110,24 +72,6 @@ void chartPatternsCleanup()
      
 void chartLinesCleanup()
 {
-  int i, x;
-  for (i = 0; i < chartLineCount; i++)
-    {
-      lxw_chart_line* l = &chartLines[i];
-      if (!l) continue;
-      for (x = 0; x < chartPointCount; x++)
-	{
-	  lxw_chart_point* p = &chartPoints[x];
-	  if (p->line == l)
-	    {
-	      printf("Chart line # %d is referenced in chart point objects, to free chart lines, "
-                     "free the chart point objects (chart-points-cleanup) first, and call "
-                     "(chart-lines-cleanup) again.\n",
-		     i);
-	      return;
-	    }
-	}
-    }
   if (chartLineCount)
     {free(chartLines);}
   maxAllowedChartLines = 0;
@@ -171,56 +115,6 @@ void chartFontsCleanup()
   chartFontIndex = 0;
 }
 
-void debugFormat(lxw_format* f)
-{
-}
-
-void debugFormats()
-{
-  if (!formatCount)
-    {return;}
-  int i;
-  for (i =0; i<formatCount; i++)
-    {
-      debugFormat(&formats[i]);
-    }
-}
-
-void debugChartPattern (lxw_chart_pattern* p)
-{
-  if (p->fg_color)
-    {
-      printf("Pattern FG Color Set To: %lx, (uint32_t) %lu\n", 
-	     (uint32_t) p->fg_color,
-	     (uint32_t) p->fg_color);
-    }
-  if (p->bg_color)
-    {
-      printf("Pattern BG Color Set To: %lx, (int32) %lu\n",
-	     (uint32_t) p->bg_color,
-	     (uint32_t) p->bg_color);
-    }
-  printf("Pattern Type Set To: %u\n", p->type);
-  printf("===========\n");
- 
-}
-     
-void debugChartLine (lxw_chart_line* l)
-{
-  if (l->color)
-    {
-      printf("Color Set To:  %lx, (int32) %lu\n", 
-	     (uint32_t) l->color, 
-	     (uint32_t) l->color);
-    }
-  if (l->none)
-    {printf("`none` Set To: %u\n", l->none);}
-  if (l->width)
-    {printf("Width Set To: %f\n", l->width);}
-  if (l->dash_type)
-    {printf("Dash type Set To: %u\n", l->dash_type);}
-  printf("===========\n");
-}
 
 void initFormats (ptrdiff_t allocateN)
 {
@@ -448,149 +342,6 @@ void addToColNumberList(unsigned short val)
 {
   if (colNumberCount < maxAllowedColNumbers)
     {*(colNumbers + colNumberCount) = (lxw_col_t) val;}
-}
-
-void debugDataValidationList()
-{
-  int i = 0;
-  while(i < 255 && dataValidationList[i])
-    {
-      printf("%s %d", dataValidationList[i], i);
-      i++;
-    }
-}
-
-void debugDataValidation(lxw_data_validation* dv)
-{
-  printf("validate: %u \n"
-         "criteria: %u \n"
-         "ignore_blank: %u \n"
-         "show_input: %u \n"
-         "show_error: %u \n"
-         "error_type: %u \n"
-         "dropdown: %u \n"
-         "value_number: %f \n"
-         "value_formula: %s \n"
-         "value_datetime_year: %d \n"
-         "value_datetime_month: %d \n"
-         "value_datetime_day: %d \n"
-         "value_datetime_min: %d \n"
-         "value_datetime_sec: %f \n"
-         "minimum_number: %f \n"
-         "minimum_formula: %s \n"
-         "minimum_datetime_year: %d \n"
-         "minimum_datetime_month: %d \n"
-         "minimum_datetime_day: %d \n"
-         "minimum_datetime_min: %d \n"
-         "minimum_datetime_sec: %f \n"
-         "maximum_number: %f \n"
-         "maximum_formula: %s \n"
-         "maximum_datetime_year: %d \n"
-         "maximum_datetime_month: %d \n"
-         "maximum_datetime_day: %d \n"
-         "maximum_datetime_min: %d \n"
-         "maximum_datetime_sec: %f \n"
-         "input_title: %s \n"
-         "input_message: %s \n"
-         "error_title: %s \n"
-         "error_message: %s ",
-	 dv->validate,
-	 dv->criteria,
-	 dv->ignore_blank,
-	 dv->show_input,
-	 dv->show_error,
-	 dv->error_type,
-	 dv->dropdown,
-	 dv->value_number,
-	 dv->value_formula,
-	 dv->value_datetime.year,
-	 dv->value_datetime.month,
-	 dv->value_datetime.day,
-	 dv->value_datetime.min,
-	 dv->value_datetime.sec,
-	 dv->minimum_number,
-	 dv->minimum_formula,
-	 dv->minimum_datetime.year,
-	 dv->minimum_datetime.month,
-	 dv->minimum_datetime.day,
-	 dv->minimum_datetime.min,
-	 dv->minimum_datetime.sec,
-	 dv->maximum_number,
-	 dv->maximum_formula,
-	 dv->maximum_datetime.year,
-	 dv->maximum_datetime.month,
-	 dv->maximum_datetime.day,
-	 dv->maximum_datetime.min,
-	 dv->maximum_datetime.sec,
-	 dv->input_title,
-	 dv->input_message,
-	 dv->error_title,
-	 dv->error_message);
-}
-
-void debugDataValidations()
-{
-  int i;
-  for (i = 0; i < dataValidationCount; i++)
-    {
-      lxw_data_validation* v = &dataValidations[i];
-      debugDataValidation(v);
-    }
-}
-
-void debugChartPoints()
-{
-  int i;
-  for (i = 0; i < chartPointCount; i++)
-    {
-      lxw_chart_fill* a = chartPoints[i].fill;
-      printf("============================== %s \n %d",
-	     "Processing Chart Point: \n", 
-	     i);
-      if (chartPoints[i].line)
-	{debugChartLine(chartPoints[i].line);}
-      if (chartPoints[i].fill)
-	{debugChartFill(chartPoints[i].fill);}
-      if (chartPoints[i].pattern)
-	{debugChartPattern(chartPoints[i].pattern);}
-    }
-}
-
-void debugChartFill (lxw_chart_fill* c)
-{
-  if (c->color)
-    {
-      printf("Fill Color Set To: %lu, (uint32_t) %ld\n", 
-	     (uint32_t) c->color,
-	     (uint32_t) c->color);
-    }
-  if (c->none)
-    {printf("Fill `None` Value Set To: %u\n", c->none);}
-  if (c->transparency)
-    {printf("Fill `None` Value Set To: %u\n", c->transparency);}
-  printf("===========\n");
-}
-
-void debugChartFills()
-{
-  int i;
-  for (i = 0; i < chartFillCount; i++)
-    {debugChartFill(&chartFills[i]);}
-}
-
-void debugChartLines()
-{
-  int i;
-  for (i = 0; i < chartLineCount; i++)
-    {debugChartLine(&chartLines[i]);}
-}
-
-
-void debugChartPatterns()
-{
-  int i;
-  for (i = 0; i < chartPatternCount; i++)
-    {debugChartPattern(&chartPatterns[i]);}
 }
 
 void setDataValidationIndex(ptrdiff_t ind)
@@ -1100,8 +851,6 @@ void worksheetSetVPageBreaks()
 
 void createFormat()
 {
-  //if (workbook)
-  //  {format = workbook_add_format(workbook);}
   if (formatCount > maxAllowedFormats)
     {
       printf("trying to add more formats than alotted in init, in add-format.");
@@ -2634,61 +2383,99 @@ void chartsheetSetFooterOpt(char* footerStr, double margin)
     }
 }
 
-void initRichStrings(ptrdiff_t allocateN)
+void initRichStringList(ptrdiff_t allocateN)
 {
-  rs = calloc(allocateN, sizeof(char*));
-  rsFormatIndice = calloc(allocateN, sizeof(ptrdiff_t));
-  maxAllowedRS = allocateN;
-  rsCount = 0;
+  maxAllowedRichStrings = allocateN;
+  richStringList = calloc(allocateN, sizeof(lxw_rich_string_tuple**));
+  richStringCount = 0;
 }
 
-void createRichStringChunk(char* stringChunk)
+void initRichString(ptrdiff_t allocateN)
 {
-  if (rs &&
-      rsCount < maxAllowedRS)
-    {
-      *(rs + rsCount) = stringChunk;
-      *(rsFormatIndice + rsCount) = formatIndex;
-      rsCount++;
-    }
-  else
-    {printf("error in create-rich-string-chunk trying to use more rich strings than allocated");}
+  richString = calloc(allocateN, sizeof(lxw_rich_string_tuple*));
+  richStringFragments = calloc(allocateN, sizeof(lxw_rich_string_tuple));
+  rsFragmentStrings = calloc(allocateN , sizeof(char*));
+  maxAllowedRichStringFragments = allocateN;
+  richStringFragmentCount = 0;
 }
+
+void createRichStringFragment(char* stringChunk)
+{
+  if (!richStringFragmentCount)
+    {richStringFragmentCount = 0;}
+  if (richStringFragments &&
+      richStringFragmentCount < maxAllowedRichStringFragments)
+    {
+      lxw_format* f;
+      *(rsFragmentStrings + richStringFragmentCount) = malloc(strlen(stringChunk) * sizeof(char));
+      strcpy(rsFragmentStrings[richStringFragmentCount], stringChunk);
+      if (formats)
+	{f = formats[formatIndex];}
+      *(richStringFragments + richStringFragmentCount) =
+	(lxw_rich_string_tuple)
+	{.format = f,
+	 .string = rsFragmentStrings[richStringFragmentCount]};
+      richStringFragmentCount++;
+    }
+}
+
+void richStringCleanup()
+{
+  if (richString)
+    {free(richString);}
+  if (richStringFragments)
+    {free(richStringFragments);}
+  richStringFragmentCount = 0;
+  maxAllowedRichStringFragments = 0;
+}
+
+void richStringListCleanup()
+{
+  if (richStringList)
+    {free(richStringList);}
+  if (rsFragmentStrings)
+    {free(rsFragmentStrings);}
+  richStringCount = 0;
+  maxAllowedRichStrings = 0;
+}
+  
 
 void worksheetWriteRichString()
 {
-  if (rsCount < 2)
+  if (!richStringCount)
+    {richStringCount = 0;}
+  if (!worksheet)
+    {return;}
+  if (richStringFragmentCount < 2)
     {
-      printf("error worksheet-write-string not enough rich string segments.");
+      printf("worksheet-write-rich-string error, rich string needs more than 1 fragment.");
       return;
     }
-  rsChunkHolder = calloc(rsCount, sizeof(lxw_rich_string_tuple*));
-  rsChunks = calloc(rsCount, sizeof(lxw_rich_string_tuple));
-  ptrdiff_t i;
-  for (i = 0; i<rsCount; i++)
+  if (!richStringList)
     {
-      *(rsChunks + i) =
-	(lxw_rich_string_tuple)
-	{.format = formats[rsFormatIndice[i]],
-	 .string = rs[i]};
-      *(rsChunkHolder + i) = &rsChunks[i];
+      printf("worksheet-write-rich-string error, initialize rich string list first.");
+      return;
     }
-  worksheet_write_rich_string(worksheet, row, col, rsChunkHolder, formats[formatIndex]);
+  if (richStringCount >= maxAllowedRichStrings)
+    {
+      lxw_rich_string_tuple*** nrsl = calloc(richStringCount, sizeof(lxw_rich_string_tuple**));
+      memcpy(nrsl, richStringList, sizeof(nrsl));
+      richStringList = calloc(richStringCount + 1, sizeof(lxw_rich_string_tuple**));
+      memcpy(richStringList, nrsl, sizeof(richStringList));
+    }
+  lxw_format* f;
+  if (formats)
+    {f = formats[formatIndex];}
+
+  int i;
+  for (i = 0; i < richStringFragmentCount; i++)
+    {richString[i] = &richStringFragments[i];}
+  *(richStringList + richStringCount) = richString;
+  worksheet_write_rich_string(worksheet, row, col, richStringList[richStringCount], NULL);
+  richStringCount++;
 }
 
-void richStringsCleanup()
-{
-  if (rs)
-    {free(rs);}
-  if (rsFormatIndice)
-    {free(rsFormatIndice);}
-  if (rsChunkHolder)
-    {free(rsChunkHolder);}
-  if (rsChunks)
-    {free(rsChunks);}
-  rsCount = 0;
-  maxAllowedRS = 0;
-}
+
 
 void closeWorkbook()
 {
@@ -2707,7 +2494,8 @@ void closeWorkbook()
   seriesCleanup();
   seriesErrorBarsCleanup();
   chartsCleanup();
-  richStringsCleanup();
+  richStringCleanup();
+  richStringListCleanup();
 }
 
 

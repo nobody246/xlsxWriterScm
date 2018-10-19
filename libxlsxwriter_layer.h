@@ -79,9 +79,12 @@ lxw_chart_fill*  upBarFill;
 lxw_chart_line*  downBarLine;
 lxw_chart_fill*  downBarFill;
 
-char** rs;
-ptrdiff_t* rsFormatIndice;
-lxw_rich_string_tuple** rsChunkHolder;
-lxw_rich_string_tuple* rsChunks;
-ptrdiff_t maxAllowedRS;
-ptrdiff_t rsCount;
+lxw_rich_string_tuple*** richStringList;
+ptrdiff_t richStringCount;
+ptrdiff_t maxAllowedRichStrings;
+lxw_rich_string_tuple** richString;
+lxw_rich_string_tuple* richStringFragments;
+char** rsFragmentStrings;
+ptrdiff_t richStringFragmentCount;
+ptrdiff_t maxAllowedRichStringFragments;
+

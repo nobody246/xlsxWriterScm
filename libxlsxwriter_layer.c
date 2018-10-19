@@ -2457,6 +2457,7 @@ void worksheetWriteRichString()
       memcpy(nrsl, richStringList, sizeof(nrsl));
       richStringList = calloc(richStringCount + 1, sizeof(lxw_rich_string_tuple**));
       memcpy(richStringList, nrsl, sizeof(richStringList));
+      maxAllowedRichStrings++;
     }
   lxw_format* f;
   if (formats)

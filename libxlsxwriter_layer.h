@@ -87,4 +87,3 @@ lxw_rich_string_tuple* richStringFragments;
 char** rsFragmentStrings;
 ptrdiff_t richStringFragmentCount;
 ptrdiff_t maxAllowedRichStringFragments;
-ptrdiff_t alottedStringFragmentSize;//hacky.. is it necessary?

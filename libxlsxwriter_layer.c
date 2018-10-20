@@ -4,6 +4,14 @@ void createWorkbook(char* workbookName)
   workbook = workbook_new(workbookName);
 }
 
+
+void createWorkbookConstantMemory(char* workbookName)
+{
+  lxw_workbook_options options = {.constant_memory = LXW_TRUE,
+				  .tmpdir = NULL};
+  workbook = workbook_new_opt(workbookName, &options);
+}
+
 void formatsCleanup()
 {
   if (formats)
@@ -407,7 +415,13 @@ void setChartFontIndex(ptrdiff_t ind)
 void addWorksheet(char* worksheetName)
 {
   if (workbook)
-    {worksheet = workbook_add_worksheet(workbook, worksheetName);}
+    {
+      if (strlen(worksheetName) == 0)
+	{worksheet = workbook_add_worksheet(workbook, NULL);}
+      else
+	{worksheet = workbook_add_worksheet(workbook, worksheetName);}
+
+    }
 }
 
 void worksheetWriteString(char* value)
@@ -2472,7 +2486,7 @@ void worksheetWriteRichStringFragments()
   for (i = 0; i < richStringFragmentCount; i++)
     {richString[i] = &richStringFragments[i];}
   *(richStringList + richStringCount) = richString;
-  worksheet_write_rich_string(worksheet, row, col, richStringList[richStringCount], NULL);
+  worksheet_write_rich_string(worksheet, row, col, richStringList[richStringCount], f);
   richStringCount++;
 }
 

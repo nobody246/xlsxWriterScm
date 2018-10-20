@@ -34,7 +34,6 @@
 
 
 (set-pos 6 0)
-(set-format 'center)
 (worksheet-write-rich-string `((,($formats 'italic) "j =k")
                                (,($formats 'superscript) "(n-1)")))
 

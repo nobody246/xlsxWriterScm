@@ -2440,7 +2440,7 @@ void richStringListCleanup()
 }
   
 
-void worksheetWriteRichString()
+void worksheetWriteRichStringFragments()
 {
   if (!worksheet)
     {return;}

@@ -2454,7 +2454,14 @@ void worksheetWriteRichStringFragments()
   if (richStringCount >= maxAllowedRichStrings)
     {
       int c = richStringCount + 1;
-      richStringList = realloc(richStringList, c * sizeof(lxw_rich_string_tuple**));
+      lxw_rich_string_tuple*** r = malloc(c * sizeof(lxw_rich_string_tuple**));
+      r = realloc(richStringList, c * sizeof(lxw_rich_string_tuple**));
+      if (!r)
+	{
+	  printf("error, problem reallocating memory in worksheet-write-rich-string-fragments");
+	  return;
+	}
+      richStringList = r;
       maxAllowedRichStrings++;
     }
   lxw_format* f;

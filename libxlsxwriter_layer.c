@@ -2453,10 +2453,8 @@ void worksheetWriteRichString()
     }
   if (richStringCount >= maxAllowedRichStrings)
     {
-      lxw_rich_string_tuple*** nrsl = calloc(richStringCount, sizeof(lxw_rich_string_tuple**));
-      memcpy(nrsl, richStringList, sizeof(nrsl));
-      richStringList = calloc(richStringCount + 1, sizeof(lxw_rich_string_tuple**));
-      memcpy(richStringList, nrsl, sizeof(richStringList));
+      int c = richStringCount + 1;
+      richStringList = realloc(richStringList, c * sizeof(lxw_rich_string_tuple**));
       maxAllowedRichStrings++;
     }
   lxw_format* f;

@@ -5,7 +5,7 @@
 [module 
     xlsxwriterscm
     *
-  (import scheme chicken foreign srfi-69)
+  (import scheme chicken foreign data-structures)
   (foreign-declare "##include             \"xlsxwriter.h\"
                     ##include             \"libxlsxwriter_layer.h\"
                     ##include             \"nonwrapped.c\"
@@ -360,7 +360,8 @@
   
   ~A
 
-  (include "libxlsxwriter_helper.scm")
+  ~A
+  
   ]
 EOF
 )
@@ -405,8 +406,10 @@ EOF
            (g (s-replace "\"uint16_t\"" "unsigned-short" g))
            (g (s-replace "\"uint32_t\"" "unsigned-integer32" g))
            (g (s-replace "\"int32_t\""  "integer32" g))
-           (g (s-replace "\"ptrdiff_t\""  "integer" g)))
+           (g (s-replace "\"ptrdiff_t\""  "integer" g))
+           (a (s-join "\n" (read-lines "libxlsxwriter_helper.scm"))))
       (printf project-header
-              g))))
+              g
+              a))))
 (exit)
 

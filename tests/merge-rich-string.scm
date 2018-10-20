@@ -1,0 +1,28 @@
+(use xlsxwriterscm)
+
+(create-workbook "merge-rich-string.xlsx")
+(define-formats '((red ((set-font-color #xFF0000)
+                        (set-align ($align 'center))
+                        (set-align ($align 'vertical-center))))
+                  (blue ((set-font-color #x0000FF)
+                         (set-align ($align 'center))
+                         (set-align ($align 'vertical-center))))
+                  (merge-format ((set-bold)
+                                 (set-border ($border 'thin))
+                                 (set-align ($align 'center))
+                                 (set-align ($align 'vertical-center))))
+                  (none ())))
+(add-worksheet "")
+(set-pos 1 1)
+(set-format 'merge-format)
+(worksheet-merge-range "" 1 1 4 3)
+(worksheet-write-rich-string `((,($formats 'none) "This is ")
+                               (,($formats 'red)  "red ")
+                               (,($formats 'none) "and this is ")
+                               (,($formats 'blue) "blue.")))
+(set-format 'none)
+(close-workbook)
+(exit)
+
+
+

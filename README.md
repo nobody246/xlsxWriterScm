@@ -1,7 +1,7 @@
 # xlsxwriter-scm
 chicken-scheme libxlsxwriter bindings
 
-uses easyffi, s, srfi-69 eggs, build file uses posix egg
+uses easyffi, data-structures eggs, build file uses posix and s eggs
 
 utilizes libz, libxslxwriter c libraries.
 

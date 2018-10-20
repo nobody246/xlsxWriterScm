@@ -11,7 +11,7 @@
 (set-pos 5 1)
 (worksheet-write-number 2)
 (set-pos 6 1)
-(worksheet-write-number 2)
+(worksheet-write-number 3)
 (set-pos 0 2)
 (worksheet-write-number 300)
 (set-pos 1 2)
@@ -24,7 +24,7 @@
 (worksheet-write-number 10000)
 (worksheet-write-array-formula "{=SUM(B1:C1*B2:C2)}" 0 0 0 0)
 (worksheet-write-array-formula "{=SUM(B1:C1*B2:C2)}" 1 0 1 0)
-(worksheet-write-array-formula "{=TREND(C5:C7,B5:B7)}" 4 0 6 0)
+(worksheet-write-array-formula "{=TREND(C5:C7, B5:B7)}" 4 0 6 0)
 (close-workbook)
 (exit)
 

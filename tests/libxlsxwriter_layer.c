@@ -36,19 +36,28 @@ void colNumberCleanup()
   maxAllowedColNumbers = 0;
 }
 
-void dataValidationListsCleanup()
-{
-  if (dataValidationList)
-    {free(dataValidationList);}
-}
-
 void dataValidationsCleanup()
 {
+  puts("1");
   if (dataValidations)
     {free(dataValidations);}
+  puts("2");
+  if (dataValidationList)
+    {free(dataValidationList);}
+  puts("3");
   maxAllowedDataValidations = 0;
+  puts("4");
   dataValidationCount = 0;
+  puts("5");
   dataValidationIndex = 0;
+  puts("6");
+  if (dataValidationListCharCount)
+    {free(dataValidationListCharCount);}
+  puts("7");
+  if (dataValidationListStrIndex != NULL)
+    {free(dataValidationListStrIndex);}
+  puts("8");
+  dataValidationListCount = 0;
 }
 
 void chartPointsCleanup()
@@ -149,7 +158,21 @@ void initDataValidations (ptrdiff_t allocateN)
 {
   dataValidationsCleanup();
   dataValidations = calloc(allocateN, sizeof(lxw_data_validation));
+  dataValidationList = calloc(allocateN + 1, sizeof(char**));
+  int i;
+  //allocate space in each dataValidationList for 255 chars minus commas
+  for (i = 0; i < allocateN; i++)
+    {*(dataValidationList + i) = calloc(255, sizeof(char*)); }
+  dataValidationListCharCount = calloc(allocateN + 1, sizeof(ptrdiff_t));
+  dataValidationListStrIndex = calloc(allocateN + 1, sizeof(ptrdiff_t));
   maxAllowedDataValidations = allocateN;
+  dataValidationListCount = 0;
+  dataValidationCount = 1;
+  dataValidationIndex = 0;
+}
+
+void initDataValidationLists()
+{
 }
 
 void initChartFills (ptrdiff_t allocateN)
@@ -201,42 +224,225 @@ void initChartFonts(ptrdiff_t allocateN)
   maxAllowedChartFonts = allocateN;
 }
 
-void createDataValidationList (char* dvl)
+void createDataValidationListEntry(char* dvl)
 {
-  char* r;
-  dataValidationList = calloc(255, sizeof(char));
-  char d[1]; d[0] = ',';
-  *(dataValidationList) = strtok_r(dvl, d, &r);
-  int chCnt = 0,
-    x = 0,
-    i = 0;
-  //data validation list is restricted by Excel to 255 characters, including comma separators.
-  char* currStr;
-  while (currStr = strtok_r(NULL, d, &r))
+  if (!dataValidationCount)
+    {initDataValidations(1);}
+  if (dataValidationListCharCount[dataValidationIndex] > 254 ||
+      dataValidationListStrIndex[dataValidationIndex] > 127)
     {
-      if (chCnt >= 254)
-	{break;}
-      int c = 0;
-      while(currStr[c])
-	{c++;chCnt++;}
-      if ((254 - chCnt) >= 0)
-	{*(dataValidationList + i) = currStr;}
-      else
-	{
-	  x = chCnt - 254;
-	  c -= x;
-	  chCnt -= x;
-	  char *v = calloc(c, sizeof(char));
-	  strncpy(v, currStr, c);
-	  *(dataValidationList + i) = v;
-	  *(dataValidationList + (++i)) = NULL;
-	  break;
-	}
-      chCnt++;//inc for comma separator.
-      i++;
+      printf("error in create-data-validation-list-entry list entries maxed out.\n");
+      return;
     }
-  if (chCnt < 255)
-    {*(dataValidationList + (++i)) = NULL;}
+  int i = 0;
+  while (dvl[i] != NULL)
+    {i++;}
+  if ((i > 254) ||
+      (dataValidationListCharCount[dataValidationIndex] + i) > 254)
+    {
+      printf("error in create-data-validation-list-entry list entry is too large.\n");
+      return;
+    }
+  dataValidationListCharCount[dataValidationIndex] += i;
+  dataValidationList[dataValidationIndex][dataValidationListStrIndex[dataValidationIndex]] =
+    calloc(dataValidationListCharCount[dataValidationIndex], sizeof(char));
+  memcpy(dataValidationList[dataValidationIndex][dataValidationListStrIndex[dataValidationIndex]],
+	 dvl,
+	 dataValidationListCharCount[dataValidationIndex]);
+  dataValidationListCharCount[dataValidationIndex]+=1;//inc for comma separator
+  dataValidationListStrIndex[dataValidationIndex]+=1;//inc index
+}
+
+void setValidationValidate(uint8_t validate)
+{
+  if (!dataValidationCount)
+    {initDataValidations(1);}
+  dataValidations[dataValidationIndex].validate = validate;
+}
+
+void setValidationCriteria(uint8_t criteria)
+{
+  if (!dataValidationCount)
+      {initDataValidations(1);}
+  dataValidations[dataValidationIndex].criteria = criteria;
+}
+
+void setValidationIgnoreBlank(uint8_t ignoreBlank)
+{
+  dataValidations[dataValidationIndex].ignore_blank = ignoreBlank;
+}
+
+void setValidationShowInput(uint8_t showInput)
+{
+  dataValidations[dataValidationIndex].show_input = showInput;
+}
+
+void setValidationShowError(uint8_t showError)
+{
+  dataValidations[dataValidationIndex].show_error = showError;
+}
+
+void setValidationErrorType(uint8_t errorType)
+{
+  dataValidations[dataValidationIndex].error_type = errorType;
+}
+
+void setValidationDropdown(uint8_t dropdown)
+{
+  dataValidations[dataValidationIndex].dropdown = dropdown;
+}
+
+void setValidationValueNumber(double num)
+{
+  dataValidations[dataValidationIndex].value_number = num;
+}
+
+void setValidationValueFormula(char* form)
+{
+  dataValidations[dataValidationIndex].value_formula = form;
+}
+
+void setValidationValueDateTime(int y,
+				int m,
+				int d,
+				int h,
+				int mn,
+				double s)
+{
+  lxw_datetime x  =
+    (lxw_datetime){.year = y,
+		   .month = m,
+		   .day = d,
+		   .hour = h,
+		   .min = mn,
+		   .sec = s};
+  dataValidations[dataValidationIndex].value_datetime = x;
+}
+
+void setValidationMinNumber(double num)
+{
+  dataValidations[dataValidationIndex].minimum_number = num;
+}
+
+void setValidationMinFormula(char* form)
+{
+  dataValidations[dataValidationIndex].minimum_formula = form;
+}
+
+void setValidationMinDateTime(int y,
+			      int m,
+			      int d,
+			      int h,
+			      int mn,
+			      double s)
+{
+  lxw_datetime x  =
+    (lxw_datetime){.year = y,
+		   .month = m,
+		   .day = d,
+		   .hour = h,
+		   .min = mn,
+		   .sec = s};
+  dataValidations[dataValidationIndex].minimum_datetime = x;
+}
+
+void setValidationMaxNumber(double num)
+{
+  dataValidations[dataValidationIndex].maximum_number = num;
+}
+
+void setValidationMaxFormula(char* form)
+{
+  dataValidations[dataValidationIndex].maximum_formula = form;
+}
+
+void setValidationMaxDateTime(int y,
+			      int m,
+			      int d,
+			      int h,
+			      int mn,
+			      double s)
+{
+  lxw_datetime x  =
+    (lxw_datetime){.year = y,
+		   .month = m,
+		   .day = d,
+		   .hour = h,
+		   .min = mn,
+		   .sec = s};
+  dataValidations[dataValidationIndex].maximum_datetime = x;
+}
+
+void setValidationInputTitle(char* title)
+{
+  dataValidations[dataValidationIndex].input_title = title;
+}
+
+void setValidationInputMessage(char* message)
+{
+  dataValidations[dataValidationIndex].input_message = message;
+}
+
+void setValidationErrorTitle(char* title)
+{
+  dataValidations[dataValidationIndex].error_title = title;
+}
+
+void setValidationErrorMessage(char* message)
+{
+  dataValidations[dataValidationIndex].error_message = message;
+}
+
+void setValidationValueList()
+{
+  if (!dataValidationCount)
+    {initDataValidations(1);}
+  dataValidations[dataValidationIndex].value_list = dataValidationList[dataValidationIndex];
+}
+
+
+void createDataValidation()
+{
+  if (dataValidationCount >= maxAllowedDataValidations)
+    {
+      lxw_data_validation* v = malloc(dataValidationCount * sizeof(lxw_data_validation));
+      v = realloc(dataValidations, dataValidationCount * sizeof(lxw_data_validation));
+      if (!v)
+	{
+	  printf("error: There was a problem with allocating more data validations in create-data-validation.\n");
+	  return;
+	}
+      dataValidations = v;
+
+      char*** d = malloc(dataValidationCount * sizeof(char**));
+      d = realloc(dataValidationList, dataValidationCount * sizeof(char**));
+      if (!d)
+	{
+	  printf("error: There was a problem with allocating more data validation list space in create-data-validation.\n");
+	  return;
+	}
+      dataValidationList = d;
+      
+      ptrdiff_t* h = malloc(dataValidationCount * sizeof(ptrdiff_t));
+      h = realloc(dataValidationListCharCount, dataValidationCount * sizeof(ptrdiff_t));
+      if (!h)
+	{
+	  printf("error: There was problem allocating data-validation-list-char-count space in create-data-validation.\n");
+	}
+      dataValidationListCharCount = h;
+
+      ptrdiff_t* y = realloc(dataValidationListStrIndex, dataValidationCount * sizeof(ptrdiff_t));
+      if (!y)
+	{
+	  printf("error: There was problem allocating data-validation-list-str-index space in create-data-validation.\n");
+	}
+      dataValidationListStrIndex = y;
+      maxAllowedDataValidations++;
+      
+    }
+  worksheet_data_validation_cell(worksheet, row, col, &dataValidations[dataValidationIndex]);
+  dataValidationIndex = dataValidationCount;
+  dataValidationCount++;
 }
 
 void createChartPoint(uint none,
@@ -416,7 +622,10 @@ void addWorksheet(char* worksheetName)
 {
   if (workbook)
     {
-      if (strlen(worksheetName) == 0)
+      int i = 0;
+      while (worksheetName[i] != NULL)
+	{i++;}
+      if (i == 0)
 	{worksheet = workbook_add_worksheet(workbook, NULL);}
       else
 	{worksheet = workbook_add_worksheet(workbook, worksheetName);}
@@ -682,8 +891,11 @@ void worksheetMergeRange(char* val,
 			 unsigned short endCol)
 			 
 {
-  if (worksheet && formats)
+  if (worksheet)
     {
+      lxw_format* f = NULL;
+      if (formats)
+	{f = formats[formatIndex];}
       handleLXWError(worksheet_merge_range(worksheet,
 					   stRow,
 					   stCol,
@@ -867,7 +1079,7 @@ void createFormat()
 {
   if (formatCount > maxAllowedFormats)
     {
-      printf("trying to add more formats than alotted in init, in add-format.");
+      printf("trying to add more formats than alotted in init, in add-format.\n");
       return;
     }
   *(formats + formatCount) = workbook_add_format(workbook);
@@ -2420,9 +2632,12 @@ void createRichStringFragment(char* stringChunk)
   if (richStringFragments &&
       richStringFragmentCount < maxAllowedRichStringFragments)
     {
-      lxw_format* f;
-      *(rsFragmentStrings + richStringFragmentCount) = malloc(strlen(stringChunk) * sizeof(char));
+      int i = 0;
+      while (stringChunk[i] != NULL)
+	{i++;}
+      *(rsFragmentStrings + richStringFragmentCount) = malloc(i * sizeof(char));
       strcpy(rsFragmentStrings[richStringFragmentCount], stringChunk);
+      lxw_format* f = NULL;
       if (formats)
 	{f = formats[formatIndex];}
       *(richStringFragments + richStringFragmentCount) =
@@ -2462,7 +2677,7 @@ void worksheetWriteRichStringFragments()
     {initRichStringList(1);}  
   if (richStringFragmentCount < 2)
     {
-      printf("worksheet-write-rich-string error, rich string needs more than 1 fragment.");
+      printf("worksheet-write-rich-string error, rich string needs more than 1 fragment.\n");
       return;
     }
   if (richStringCount >= maxAllowedRichStrings)
@@ -2472,13 +2687,13 @@ void worksheetWriteRichStringFragments()
       r = realloc(richStringList, c * sizeof(lxw_rich_string_tuple**));
       if (!r)
 	{
-	  printf("error, problem reallocating memory in worksheet-write-rich-string-fragments");
+	  printf("error, problem reallocating memory in worksheet-write-rich-string-fragments\n");
 	  return;
 	}
       richStringList = r;
       maxAllowedRichStrings++;
     }
-  lxw_format* f;
+  lxw_format* f = NULL;
   if (formats)
     {f = formats[formatIndex];}
 
@@ -2504,7 +2719,6 @@ void closeWorkbook()
   formatsCleanup();
   rowNumberCleanup();
   colNumberCleanup();
-  dataValidationListsCleanup();
   dataValidationsCleanup();
   seriesCleanup();
   seriesErrorBarsCleanup();

@@ -224,8 +224,9 @@ void createDataValidationListEntry(char* dvl)
       printf("error in create-data-validation-list-entry list entries maxed out.\n");
       return;
     }
-  //use sizeof and memcpy for dvl to avoid the NULL pointer @ end
-  int i = sizeof(dvl) - 1;
+  int i = 0;
+  while (dvl[i] != NULL)
+    {i++;}
   if ((i > 254) ||
       (dataValidationListCharCount[dataValidationIndex] + i) > 254)
     {

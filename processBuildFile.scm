@@ -249,6 +249,37 @@
           (cons 'power                    ($n LXW_CHART_TRENDLINE_TYPE_POWER))
           (cons 'exp                      ($n LXW_CHART_TRENDLINE_TYPE_EXP))
           (cons 'average                  ($n LXW_CHART_TRENDLINE_TYPE_AVERAGE))))
+
+  (define validation-criteria
+    (list (cons 'between                  ($n LXW_VALIDATION_CRITERIA_BETWEEN ))
+          (cons 'not-between              ($n LXW_VALIDATION_CRITERIA_NOT_BETWEEN ))
+          (cons 'equal                    ($n LXW_VALIDATION_CRITERIA_EQUAL_TO ))
+          (cons 'not-equal                ($n LXW_VALIDATION_CRITERIA_NOT_EQUAL_TO ))
+          (cons 'greater-than             ($n LXW_VALIDATION_CRITERIA_GREATER_THAN))
+          (cons 'less-than                ($n LXW_VALIDATION_CRITERIA_LESS_THAN))
+          (cons 'greater-than-or-equal    ($n LXW_VALIDATION_CRITERIA_GREATER_THAN_OR_EQUAL_TO))
+          (cons 'less-than-or-equal       ($n LXW_VALIDATION_CRITERIA_LESS_THAN_OR_EQUAL_TO ))))
+
+  (define validation-error-type
+    (list (cons 'stop                     ($n LXW_VALIDATION_ERROR_TYPE_STOP ))
+          (cons 'warning                  ($n LXW_VALIDATION_ERROR_TYPE_WARNING ))
+          (cons 'information              ($n LXW_VALIDATION_ERROR_TYPE_INFORMATION ))))
+
+  (define validation-type
+    (list (cons 'integer                  ($n LXW_VALIDATION_TYPE_INTEGER  ))
+          (cons 'integer-formula          ($n LXW_VALIDATION_TYPE_INTEGER_FORMULA ))
+          (cons 'decimal                  ($n LXW_VALIDATION_TYPE_DECIMAL ))
+          (cons 'decimal-formula          ($n LXW_VALIDATION_TYPE_DECIMAL_FORMULA ))
+          (cons 'type-list                ($n LXW_VALIDATION_TYPE_LIST))
+          (cons 'list-formula             ($n LXW_VALIDATION_TYPE_LIST_FORMULA))
+          (cons 'date                     ($n LXW_VALIDATION_TYPE_DATE ))
+          (cons 'date-formula             ($n LXW_VALIDATION_TYPE_DATE_FORMULA  ))
+          (cons 'time                     ($n LXW_VALIDATION_TYPE_TIME  ))
+          (cons 'time-formula             ($n LXW_VALIDATION_TYPE_TIME_FORMULA ))
+          (cons 'length                   ($n LXW_VALIDATION_TYPE_LENGTH ))
+          (cons 'length-formula           ($n LXW_VALIDATION_TYPE_LENGTH_FORMULA))
+          (cons 'custom-formula           ($n LXW_VALIDATION_TYPE_CUSTOM_FORMULA))
+          (cons 'any                      ($n LXW_VALIDATION_TYPE_ANY))))  
   
   (define lxw-boolean
     (list (cons 'true    ($n LXW_TRUE))
@@ -357,6 +388,21 @@
     (syntax-rules ()
       (($axis-type body)
        (alist-ref body axis-type))))
+
+  (define-syntax $validation-criteria
+    (syntax-rules ()
+      (($validation-criteria body)
+       (alist-ref body validation-criteria))))
+
+  (define-syntax $validation-error-type
+    (syntax-rules ()
+      (($validation-error-type body)
+       (alist-ref body validation-error-type))))
+
+  (define-syntax $validation-type
+    (syntax-rules ()
+      (($validation-type body)
+       (alist-ref body validation-type))))
   
   ~A
 

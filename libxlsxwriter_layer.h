@@ -58,13 +58,18 @@ ptrdiff_t maxAllowedDataValidations = 0;
 ptrdiff_t dataValidationCount = 0;
 ptrdiff_t dataValidationIndex = 0;
 
+char*** dataValidationList;
+ptrdiff_t* dataValidationListCharCount;
+ptrdiff_t* dataValidationListStrIndex;
+ptrdiff_t dataValidationListCount = 0;
+
+
 lxw_series_error_bars** seriesErrorBars;
 ptrdiff_t maxAllowedSeriesErrorBars = 0;
 ptrdiff_t seriesErrorBarsCount = 0;
 ptrdiff_t seriesErrorBarsIndex = 0;
 
 
-char** dataValidationList;
 
 char* errorStr;
 

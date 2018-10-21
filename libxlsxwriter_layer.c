@@ -38,25 +38,17 @@ void colNumberCleanup()
 
 void dataValidationsCleanup()
 {
-  puts("1");
   if (dataValidations)
     {free(dataValidations);}
-  puts("2");
   if (dataValidationList)
     {free(dataValidationList);}
-  puts("3");
   maxAllowedDataValidations = 0;
-  puts("4");
   dataValidationCount = 0;
-  puts("5");
   dataValidationIndex = 0;
-  puts("6");
   if (dataValidationListCharCount)
     {free(dataValidationListCharCount);}
-  puts("7");
   if (dataValidationListStrIndex != NULL)
     {free(dataValidationListStrIndex);}
-  puts("8");
   dataValidationListCount = 0;
 }
 
@@ -235,7 +227,7 @@ void createDataValidationListEntry(char* dvl)
       return;
     }
   int i = 0;
-  while (dvl[i] != NULL)
+  while (dvl[i] != '\0')
     {i++;}
   if ((i > 254) ||
       (dataValidationListCharCount[dataValidationIndex] + i) > 254)
@@ -623,7 +615,7 @@ void addWorksheet(char* worksheetName)
   if (workbook)
     {
       int i = 0;
-      while (worksheetName[i] != NULL)
+      while (worksheetName[i] != '\0')
 	{i++;}
       if (i == 0)
 	{worksheet = workbook_add_worksheet(workbook, NULL);}
@@ -2633,7 +2625,7 @@ void createRichStringFragment(char* stringChunk)
       richStringFragmentCount < maxAllowedRichStringFragments)
     {
       int i = 0;
-      while (stringChunk[i] != NULL)
+      while (stringChunk[i] != '\0')
 	{i++;}
       *(rsFragmentStrings + richStringFragmentCount) = malloc(i * sizeof(char));
       strcpy(rsFragmentStrings[richStringFragmentCount], stringChunk);

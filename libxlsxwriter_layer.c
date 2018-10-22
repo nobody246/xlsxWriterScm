@@ -179,7 +179,6 @@ void chartFontsCleanup()
   chartFontIndex = 0;
 }
 
-
 void initFormats (ptrdiff_t allocateN)
 {
   formatsCleanup();
@@ -620,14 +619,44 @@ void createChartFont(char* name,
 
 void addToRowNumberList(uint32_t val)
 {
+  if (!rowNumbers)
+    {initRowNumbers(1);}
+   if (rowNumberCount >= maxAllowedRowNumbers)
+    {
+      lxw_row_t* d = malloc(rowNumberCount * sizeof(lxw_row_t));
+      d = realloc(rowNumbers, rowNumberCount * sizeof(lxw_row_t));
+      if (!d)
+	{
+	  printf("error in add-to-col-number-list with allocating more col numbers.");
+	  return;
+	}
+      rowNumbers = d;
+      maxAllowedRowNumbers+=1;
+    }
   if (rowNumberCount < maxAllowedRowNumbers)
     {*(rowNumbers + rowNumberCount) = (lxw_row_t) val;}
+  rowNumberCount += 1;
 }
 
 void addToColNumberList(unsigned short val)
 {
+  if (!colNumbers)
+    {initColNumbers(1);}
+  if (colNumberCount >= maxAllowedColNumbers)
+    {
+      lxw_col_t* d = malloc(colNumberCount * sizeof(lxw_col_t));
+      d = realloc(colNumbers, colNumberCount * sizeof(lxw_col_t));
+      if (!d)
+	{
+	  printf("error in add-to-col-number-list with allocating more col numbers.");
+	  return;
+	}
+      colNumbers = d;
+      maxAllowedColNumbers+=1;
+    }
   if (colNumberCount < maxAllowedColNumbers)
     {*(colNumbers + colNumberCount) = (lxw_col_t) val;}
+  colNumberCount += 1;
 }
 
 void setDataValidationIndex(ptrdiff_t ind)
@@ -762,7 +791,7 @@ void worksheetWriteArrayFormula(char *formula,
 						   endCol,
 						   formula, 
 						   f), 
-		     "worksheet-write-formula");
+		     "worksheet-write-array-formula");
     }
 }
 
@@ -1138,6 +1167,7 @@ void worksheetSetHPageBreaks()
   if (worksheet &&
       rowNumbers)
     {worksheet_set_h_pagebreaks(worksheet, colNumbers);}
+  colNumberCleanup();
 }
 
 void worksheetSetVPageBreaks()
@@ -1145,6 +1175,7 @@ void worksheetSetVPageBreaks()
   if (worksheet &&
       colNumbers)
     {worksheet_set_v_pagebreaks(worksheet, rowNumbers);}
+  colNumberCleanup();
 }
 
 void createFormat()
@@ -1470,13 +1501,12 @@ void workbookSetCustomPropertyDatetime(char* name,
     }
 }
 
-void workbookDefineName(char* name, char* formula)
+void workbookDefineName(char* name, char* val)
 {
-  if (workbook)
-    {
-      handleLXWError(workbook_define_name(workbook, name, formula),
-		     "workbook-define-name");
-    }
+  if (!workbook)
+    {return;}
+  handleLXWError(workbook_define_name(workbook, name, val),
+		 "workbook-define-name");
 }
 
 void workbookGetWorksheetByName(char* name)
@@ -2305,7 +2335,10 @@ void addChartLegendSeriesToDelete(uint16_t series)
   if (!deleteSeries)
     {deleteSeries = calloc(100, sizeof(uint16_t));}
   if (deleteSeriesCount < 100)
-    {*(deleteSeries + deleteSeriesCount++) = series;}
+    {
+      *(deleteSeries + deleteSeriesCount) = series;
+      deleteSeriesCount += 1;
+    }
   else
     {chartLegendDeleteSeries();}
 }
@@ -2770,7 +2803,6 @@ void worksheetWriteRichStringFragments()
   lxw_format* f = NULL;
   if (formats)
     {f = formats[formatIndex];}
-
   int i;
   for (i = 0; i < richStringFragmentCount; i++)
     {richString[i] = &richStringFragments[i];}
@@ -2779,7 +2811,49 @@ void worksheetWriteRichStringFragments()
   richStringCount+=1;
 }
 
+void allWorksheetsSetColumn(double width,
+			    unsigned short stCol,
+			    unsigned short endCol)
+{
+  lxw_format* f = NULL;
+  if (formats)
+    {f = formats[formatIndex];}  
+  LXW_FOREACH_WORKSHEET(worksheet, workbook){
+    worksheet_set_column(worksheet, stCol, endCol, width, f);
+  }
+}
 
+void allWorksheetsSetRow(double height,
+			 uint32_t row)
+{
+  lxw_format* f = NULL;
+  if (formats)
+    {f = formats[formatIndex];}  
+  LXW_FOREACH_WORKSHEET(worksheet, workbook){
+    worksheet_set_row(worksheet, row, height, f);
+  }
+}
+
+
+void allWorksheetsWriteString(char* val)
+{
+  lxw_format* f = NULL;
+  if (formats)
+    {f = formats[formatIndex];}  
+  LXW_FOREACH_WORKSHEET(worksheet, workbook){
+    worksheet_write_string(worksheet, row, col, val, f);
+  }
+}
+
+void allWorksheetsWriteFormula(char* val)
+{
+  lxw_format* f = NULL;
+  if (formats)
+    {f = formats[formatIndex];}  
+  LXW_FOREACH_WORKSHEET(worksheet, workbook){
+    worksheet_write_formula(worksheet, row, col, val, f);
+  }
+}
 
 void closeWorkbook()
 {

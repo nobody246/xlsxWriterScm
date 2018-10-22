@@ -362,8 +362,12 @@ void setValidationValueNumber(double num)
 
 void setValidationValueFormula(char* form)
 {
-  dataValidationsBoundsCheck(); 
-  dataValidations[dataValidationIndex].value_formula = form;
+  dataValidationsBoundsCheck();
+  int i = 1;
+  while (form[i] != '\0')
+      {i+=1;}
+  dataValidations[dataValidationIndex].value_formula = malloc(i  * sizeof(char));
+  strcpy(dataValidations[dataValidationIndex].value_formula, form);
 }
 
 void setValidationValueDateTime(int y,
@@ -392,8 +396,12 @@ void setValidationMinNumber(double num)
 
 void setValidationMinFormula(char* form)
 {
-  dataValidationsBoundsCheck(); 
-  dataValidations[dataValidationIndex].minimum_formula = form;
+  dataValidationsBoundsCheck();
+  int i=1;
+  while (form[i] != '\0')
+    {i+=1;}
+  dataValidations[dataValidationIndex].minimum_formula = malloc(i * sizeof(char));
+  strcpy(dataValidations[dataValidationIndex].minimum_formula, form);
 }
 
 void setValidationMinDateTime(int y,
@@ -422,8 +430,12 @@ void setValidationMaxNumber(double num)
 
 void setValidationMaxFormula(char* form)
 {
-  dataValidationsBoundsCheck();  
-  dataValidations[dataValidationIndex].maximum_formula = form;
+  dataValidationsBoundsCheck();
+  int i = 1;
+  while (form[i] != '\0')
+    {i+=1;}
+  dataValidations[dataValidationIndex].maximum_formula = malloc(i * sizeof(char));
+  strcpy(dataValidations[dataValidationIndex].maximum_formula, form);
 }
 
 void setValidationMaxDateTime(int y,
@@ -446,26 +458,42 @@ void setValidationMaxDateTime(int y,
 
 void setValidationInputTitle(char* title)
 {
-  dataValidationsBoundsCheck();  
-  dataValidations[dataValidationIndex].input_title = title;
+  dataValidationsBoundsCheck();
+  int i = 1;
+  while (title[i] != '\0')
+      {i+=1;}
+  dataValidations[dataValidationIndex].input_title = malloc(i * sizeof(char));
+  strcpy(dataValidations[dataValidationIndex].input_title, title);
 }
 
 void setValidationInputMessage(char* message)
 {
-  dataValidationsBoundsCheck();  
-  dataValidations[dataValidationIndex].input_message = message;
+  dataValidationsBoundsCheck();
+  int i = 1;
+  while (message[i] != '\0')
+      {i+=1;}
+  dataValidations[dataValidationIndex].input_message = malloc(i * sizeof(char));
+  strcpy(dataValidations[dataValidationIndex].input_message, message);
 }
 
 void setValidationErrorTitle(char* title)
 {
-  dataValidationsBoundsCheck();  
-  dataValidations[dataValidationIndex].error_title = title;
+  dataValidationsBoundsCheck();
+  int i;
+  while (title[i] != '\0')
+      {i+=1;}
+  dataValidations[dataValidationIndex].error_title = malloc(i * sizeof(char));
+  strcpy(dataValidations[dataValidationIndex].error_title, title);
 }
 
 void setValidationErrorMessage(char* message)
 {
-  dataValidationsBoundsCheck();  
-  dataValidations[dataValidationIndex].error_message = message;
+  dataValidationsBoundsCheck();
+  int i;
+  while (message[i] != '\0')
+      {i+=1;}
+  dataValidations[dataValidationIndex].error_message = malloc(i * sizeof(char));
+  strcpy(dataValidations[dataValidationIndex].error_message, message);
 }
 
 void setValidationValueList()
@@ -477,6 +505,13 @@ void setValidationValueList()
 
 void createDataValidation()
 {
+  if (!worksheet)
+    {return;}
+  if (!dataValidationCount)
+    {
+      printf("error from create-data-validation, data Validation is not initialized.");
+      return;
+    }
   worksheet_data_validation_cell(worksheet, row, col, &dataValidations[dataValidationIndex]);
   dataValidationIndex = dataValidationCount;
   dataValidationCount+=1;
@@ -661,7 +696,7 @@ void addWorksheet(char* worksheetName)
     {
       int i = 0;
       while (worksheetName[i] != '\0')
-	{i++;}
+	{i+=1;}
       if (i == 0)
 	{worksheet = workbook_add_worksheet(workbook, NULL);}
       else
@@ -1114,6 +1149,8 @@ void worksheetSetVPageBreaks()
 
 void createFormat()
 {
+  if (!workbook)
+    {return;}
   if (formatCount > maxAllowedFormats)
     {
       printf("trying to add more formats than alotted in init, in add-format.\n");
@@ -1222,10 +1259,10 @@ void setRotation(int degrees)
     {format_set_rotation(formats[formatIndex], degrees);}
 }
 
-void setIndentation(int level)
+void setIndent(int level)
 {
   if (formats)
-    {format_set_indentation(formats[formatIndex], level);}
+    {format_set_indent(formats[formatIndex], level);}
 }
 
 void setBold()

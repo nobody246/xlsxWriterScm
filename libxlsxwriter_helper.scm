@@ -1,11 +1,20 @@
 (define user-formats '())
+(define data-validations '())
 (define format-c 0)
+(define data-validation-c 0)
 
 (define ($formats format-name)
   (car (alist-ref format-name user-formats)))
 
+(define ($data-validations data-validation-name)
+  (car (alist-ref data-validation-name data-validations)))
+
 (define (set-format format-name)
   (set-format-index ($formats format-name)))
+
+(define (set-data-validation data-validation-name)
+  (set-data-validation-index ($data-validations
+                              data-validation-name)))
 
 (define (define-formats format-definitions)
   (let ((allowed-format-definition-functions
@@ -28,7 +37,7 @@
            set-font-color
            set-font-name
            set-rotation
-           set-indentation
+           set-indent
            set-bold
            set-italic
            set-shrink

@@ -1,7 +1,7 @@
 (use posix s)
 
 (define project-header #<#EOF
-(use srfi-69 easyffi)
+(use data-structures easyffi)
 [module 
     xlsxwriterscm
     *
@@ -270,7 +270,7 @@
           (cons 'integer-formula          ($n LXW_VALIDATION_TYPE_INTEGER_FORMULA ))
           (cons 'decimal                  ($n LXW_VALIDATION_TYPE_DECIMAL ))
           (cons 'decimal-formula          ($n LXW_VALIDATION_TYPE_DECIMAL_FORMULA ))
-          (cons 'type-list                ($n LXW_VALIDATION_TYPE_LIST))
+          (cons 'list                     ($n LXW_VALIDATION_TYPE_LIST))
           (cons 'list-formula             ($n LXW_VALIDATION_TYPE_LIST_FORMULA))
           (cons 'date                     ($n LXW_VALIDATION_TYPE_DATE ))
           (cons 'date-formula             ($n LXW_VALIDATION_TYPE_DATE_FORMULA  ))
@@ -403,6 +403,8 @@
     (syntax-rules ()
       (($validation-type body)
        (alist-ref body validation-type))))
+
+  (define $lxw-def-row-height ($n LXW_DEF_ROW_HEIGHT))
   
   ~A
 

@@ -2636,6 +2636,14 @@ void chartsheetSetTabColor(uint32_t color)
     {chartsheet_set_tab_color(chartsheet, color);}
 }
 
+void worksheetSetDefaultRow(double height,
+			    uint8_t hideUnusedRows)
+{
+  if (!worksheet)
+    {return;}
+  worksheet_set_default_row(worksheet, height, hideUnusedRows);
+}
+
 void worksheetProtect(char* pswd,
 		      uint8_t 	no_select_locked_cells,
 		      uint8_t 	no_select_unlocked_cells,

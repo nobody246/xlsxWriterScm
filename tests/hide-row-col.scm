@@ -1,0 +1,21 @@
+(use xlsxwriterscm)
+
+(create-workbook "hide-row-col.xlsx")
+(add-worksheet "")
+(set-pos 0 3)
+(worksheet-write-string "Column F and G is hidden.")
+(set-pos 7 0)
+(worksheet-write-string "Some hidden rows.")
+
+(worksheet-set-default-row 15 ($lxw-bool 'true))
+(worksheet-set-row 15 0)
+(worksheet-set-row 15 1)
+(worksheet-set-row 15 2)
+(worksheet-set-row 15 3)
+(worksheet-set-row 15 4)
+(worksheet-set-row 15 5)
+(create-row-col-opt 0 1 0)
+(worksheet-set-column-opt 8.43 5 6)
+(close-workbook)
+(exit)
+

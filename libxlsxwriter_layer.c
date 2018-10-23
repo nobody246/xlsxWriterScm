@@ -1091,11 +1091,18 @@ void worksheetSetFirstSheet()
     {worksheet_set_first_sheet(worksheet);}
 }
 
+void worksheetFreezePanes(uint32_t row,
+			  uint16_t col)
+{
+  if (worksheet)
+    {worksheet_freeze_panes(worksheet, row, col);}
+}
+
 void worksheetSplitPanes(double vertical,
 			 double horizontal)
 {
   if (worksheet)
-    {worksheet_split_planes(worksheet, vertical, horizontal);}
+    {worksheet_split_panes(worksheet, vertical, horizontal);}
 }
 
 void worksheetSetSelection(uint32_t stRow,

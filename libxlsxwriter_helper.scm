@@ -25,6 +25,7 @@
            set-cell-num-format-index
            format-hide-formula
            format-set-unlocked
+           format-set-hidden
            format-set-bold
            format-set-italic
            set-underline-single
@@ -99,6 +100,42 @@
     (w rs-segments)
     (worksheet-write-rich-string-fragments))
 
-
-  
+(define (worksheet-protect-settings #!optional
+                                    #!key
+                                    (password "")
+                                    (no-select-locked-cells 0)
+                                    (no-select-unlocked-cells 0)
+                                    (format-cells 0)
+                                    (format-columns 0)
+                                    (format-rows 0)
+                                    (insert-columns 0)
+                                    (insert-rows 0)
+                                    (insert-hyperlinks 0)
+                                    (delete-columns 0)
+                                    (delete-rows 0)
+                                    (sort 0)
+                                    (autofilter 0)
+                                    (pivot-tables 0)
+                                    (scenarios 0)
+                                    (objects 0)
+                                    (no-content 0)
+                                    (no-objects 0))
+  (worksheet-protect password
+                     no-select-locked-cells
+                     no-select-unlocked-cells
+                     format-cells
+                     format-columns
+                     format-rows
+                     insert-columns
+                     insert-rows
+                     insert-hyperlinks
+                     delete-columns
+                     delete-rows
+                     sort
+                     autofilter
+                     pivot-tables
+                     scenarios
+                     objects
+                     no-content
+                     no-objects))
       

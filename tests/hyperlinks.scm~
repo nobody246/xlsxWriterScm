@@ -1,8 +1,0 @@
-(use xlsxwriterscm)
-
-(create-workbook "hyperlinks.xlsx")
-(add-worksheet "")
-(init-formats 2)
-(create-format)
-(format-set-underline)
-(format-set-font-color #x0000FF)

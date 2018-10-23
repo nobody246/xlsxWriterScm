@@ -277,6 +277,23 @@ void initChartFonts(ptrdiff_t allocateN)
   maxAllowedChartFonts = allocateN;
 }
 
+void colOptionCleanup()
+{
+  if (colOptions)
+    {free(colOptions);}
+  colOptionIndex = 0;
+  colOptionCount = 0;
+  maxAllowedColOptions = 0;
+}
+
+
+void initColOptions(ptrdiff_t allocateN)
+{
+  colOptionCleanup();
+  colOptions = calloc(allocateN, sizeof(lxw_row_col_options));
+  maxAllowedColOptions = allocateN;
+}
+
 void createDataValidationListEntry(char* dvl)
 {
   dataValidationsBoundsCheck();
@@ -719,6 +736,12 @@ void setChartFontIndex(ptrdiff_t ind)
     {chartFontIndex = ind;}
 }
 
+void setColOptionIndex(ptrdiff_t ind)
+{
+  if (ind < colOptionCount)
+    {colOptionIndex = ind;}
+}
+
 void addWorksheet(char* worksheetName)
 {
   if (workbook)
@@ -864,30 +887,27 @@ void worksheetSetRow(double height,
     }
 }
 
-
-void worksheetSetRowOpt(unsigned char hidden,
-			unsigned char level,
-			unsigned char collapsed,
-			double height,
+void worksheetSetRowOpt(double height,
 			uint32_t row)
 {
-  if (worksheet)
+  if (!colOptionCount)
     {
-      lxw_format *f = NULL;
-      if (formats)
-	{f = formats[formatIndex];}
-      lxw_row_col_options options = {.hidden = hidden, 
-				     .level  = level, 
-				     .collapsed = collapsed};
-      handleLXWError(worksheet_set_row_opt(worksheet, row, height, f, &options), 
-		     "worksheet-set-row-opt");
+      printf("error in worksheet-set-row-opt Please init col row opts.");
+      return;
     }
+  if (!worksheet)
+    {return;}
+  lxw_format *f = NULL;
+  if (formats)
+    {f = formats[formatIndex];}
+  handleLXWError(worksheet_set_row_opt(worksheet, row, height, f, &colOptions[colOptionIndex]), 
+		 "worksheet-set-row-opt");
 }
 
 
 void worksheetSetColumn(double width,
-			unsigned short stCol,
-			unsigned short endCol)
+			uint16_t stCol,
+			uint16_t endCol)
 {
   if (worksheet)
     {
@@ -899,29 +919,27 @@ void worksheetSetColumn(double width,
     }
 }
 
-void worksheetSetColumnOpt(unsigned char hidden,
-			   unsigned char level,
-			   unsigned char collapsed,
-			   double width,
+void worksheetSetColumnOpt(double width,
 			   unsigned short stCol,
 			   unsigned short endCol)
 {
-  if (worksheet)
+  if (!colOptionCount)
     {
-      lxw_format *f = NULL;
-      if (formats)
-	{f = formats[formatIndex];}
-      lxw_row_col_options options = {.hidden = hidden, 
-				     .level  = level, 
-				     .collapsed = collapsed};
-      handleLXWError(worksheet_set_column_opt(worksheet, 
-					      stCol, 
-					      endCol, 
-					      width, 
-					      f, 
-					      &options),
-		     "worksheet-set-column-opt");
+      printf("error in worksheet-set-column-opt Please init col row opts.");
+      return;
     }
+  if (!worksheet)
+    {return;}
+  lxw_format *f = NULL;
+  if (formats)
+    {f = formats[formatIndex];}
+  handleLXWError(worksheet_set_column_opt(worksheet, 
+					  stCol, 
+					  endCol, 
+					  width, 
+					  f, 
+					  &colOptions[colOptionIndex]),
+		 "worksheet-set-column-opt");
 }
 
 
@@ -1562,6 +1580,34 @@ void createChartSeries(char* categories, char* vals)
       seriesCount+=1;
     }
 }
+
+void createRowColOpt(unsigned short level,
+		     unsigned short hidden,
+		     unsigned short collapsed)
+{
+  if (!colOptionCount)
+    {initColOptions(1);}
+  if (colOptionCount >= maxAllowedColOptions)
+    {
+      lxw_row_col_options* d = malloc(colOptionCount * sizeof(lxw_row_col_options));
+      d = realloc(colOptions, colOptionCount * sizeof(lxw_row_col_options));
+      if (!d)
+	{
+	  printf("error in worksheet-set-row-opt, problem allocating more memory for col-options ");
+	  return;
+	}
+      colOptions = d;
+      maxAllowedColOptions+=1;
+    }
+  colOptions[colOptionIndex] = (lxw_row_col_options)
+    {.hidden = hidden,
+     .level = level,
+     .collapsed = collapsed};
+  colOptionIndex = colOptionCount;
+  colOptionCount += 1;
+}
+
+
 
 void chartSeriesSetName(char* name)
 {
@@ -2774,7 +2820,6 @@ void richStringListCleanup()
   richStringCount = 0;
   maxAllowedRichStrings = 0;
 }
-  
 
 void worksheetWriteRichStringFragments()
 {
@@ -2873,6 +2918,7 @@ void closeWorkbook()
   chartsCleanup();
   richStringCleanup();
   richStringListCleanup();
+  colOptionCleanup();
 }
 
 

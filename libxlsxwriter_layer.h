@@ -93,3 +93,8 @@ char** rsFragmentStrings;
 ptrdiff_t richStringFragmentCount;
 ptrdiff_t maxAllowedRichStringFragments;
 
+lxw_row_col_options* colOptions;
+ptrdiff_t colOptionCount = 0;
+ptrdiff_t colOptionIndex = 0;
+ptrdiff_t maxAllowedColOptions = 0;
+

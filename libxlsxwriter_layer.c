@@ -1222,7 +1222,7 @@ void setCellNumFormatIndex(uint8_t index)
     {format_set_num_format_index(formats[formatIndex], index);}  
 }
 
-void formatHideFormula()
+void formatSetHidden()
 {
   if (formats)
     {format_set_hidden(formats[formatIndex]);}
@@ -1503,7 +1503,7 @@ void workbookSetCustomPropertyBoolean(char* name,
     }
 }
 
-void workbookSetCustomPropertyDatetime(char* name,
+void workbookSetCustomPropertyDateTime(char* name,
 				       int year,
 				       int month,
 				       int day,
@@ -2636,6 +2636,55 @@ void chartsheetSetTabColor(uint32_t color)
     {chartsheet_set_tab_color(chartsheet, color);}
 }
 
+void worksheetProtect(char* pswd,
+		      uint8_t 	no_select_locked_cells,
+		      uint8_t 	no_select_unlocked_cells,
+		      uint8_t 	format_cells,
+		      uint8_t 	format_columns,
+		      uint8_t 	format_rows,
+		      uint8_t 	insert_columns,
+		      uint8_t 	insert_rows,
+		      uint8_t 	insert_hyperlinks,
+		      uint8_t 	delete_columns,
+		      uint8_t 	delete_rows,
+		      uint8_t 	sort,
+		      uint8_t 	autofilter,
+		      uint8_t 	pivot_tables,
+		      uint8_t 	scenarios,
+		      uint8_t 	objects,
+		      uint8_t 	no_content,
+		      uint8_t 	no_objects)
+{
+  if (worksheet)
+    {
+      lxw_protection o = (lxw_protection)
+	{.no_select_locked_cells = no_select_locked_cells,
+	 .no_select_unlocked_cells = no_select_unlocked_cells,
+	 .format_cells = format_cells,
+	 .format_columns = format_columns,
+	 .format_rows = format_rows,
+	 .insert_columns = insert_columns,
+	 .insert_rows = insert_rows,
+	 .insert_hyperlinks = insert_hyperlinks,
+	 .delete_columns = delete_columns,
+	 .delete_rows = delete_rows,
+	 .sort = sort,
+	 .autofilter = autofilter,
+	 .pivot_tables = pivot_tables,
+	 .scenarios = scenarios,
+	 .objects = objects,
+	 .no_content = no_content,
+	 .no_objects = no_objects};
+      ptrdiff_t i = 0;
+      while (pswd[i] != '\0')
+	{i+=1;}
+      const char* x = calloc(i, sizeof(char));
+      if (pswd != "")
+	{x = pswd;}
+      worksheet_protect(worksheet, x, &o);
+    }
+}
+
 void chartsheetProtect(char* pswd,
 		       uint8_t 	no_select_locked_cells,
  		       uint8_t 	no_select_unlocked_cells,
@@ -2675,7 +2724,12 @@ void chartsheetProtect(char* pswd,
 	 .objects = objects,
 	 .no_content = no_content,
 	 .no_objects = no_objects};
-      const char* x = pswd;
+      ptrdiff_t i = 0;
+      while (pswd[i] != '\0')
+	{i+=1;}
+      const char* x = calloc(i, sizeof(char));
+      if (pswd != "")
+	{x = pswd;}
       chartsheet_protect(chartsheet, x, &o);
     }
 }
@@ -2819,6 +2873,12 @@ void richStringListCleanup()
     {free(rsFragmentStrings);}
   richStringCount = 0;
   maxAllowedRichStrings = 0;
+}
+
+void worksheetSetTabColor(uint32_t color)
+{
+  if (worksheet)
+    {worksheet_set_tab_color(worksheet, color);}
 }
 
 void worksheetWriteRichStringFragments()

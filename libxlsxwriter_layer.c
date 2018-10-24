@@ -259,14 +259,14 @@ void initChartPatterns (ptrdiff_t allocateN)
 void initSeries(ptrdiff_t allocateN)
 {
   seriesCleanup();
-  series = calloc(allocateN, sizeof(lxw_chart_series));
+  series = calloc(allocateN, sizeof(lxw_chart_series*) * sizeof(lxw_chart_series));
   maxAllowedSeries = allocateN;
 }
 
 void initCharts(ptrdiff_t allocateN)
 {
   chartsCleanup();
-  charts = calloc(allocateN, sizeof(lxw_chart));
+  charts = calloc(allocateN, sizeof(lxw_chart*));
   maxAllowedCharts = allocateN;
 }
 
@@ -1567,6 +1567,20 @@ void setPos(uint32_t rowNum,
 
 void createChart(unsigned short chartType)
 {
+  if (!charts)
+    {initCharts(1);}
+  if (chartCount >= maxAllowedCharts)
+    {
+      lxw_chart* d = malloc(chartCount * sizeof(lxw_chart*) * sizeof(lxw_chart));
+      d = realloc(charts, chartCount * sizeof(lxw_chart*) * sizeof(lxw_chart));
+      if (!d)
+	{
+	  printf("error: problem allocating more charts in create-chart");
+	  return;
+	}
+      charts = d;
+      maxAllowedCharts+=1;
+    }
   if (chartCount < maxAllowedCharts
       && charts
       && workbook)
@@ -1579,10 +1593,30 @@ void createChart(unsigned short chartType)
 
 void createChartSeries(char* categories, char* vals)
 {
+  if (!series)
+    {initSeries(1);}
+  if (seriesCount >= maxAllowedSeries)
+    {
+      lxw_chart_series** d = malloc(seriesCount * sizeof(lxw_chart_series*) * sizeof(lxw_chart_series));
+      d = realloc(series, seriesCount * sizeof(lxw_chart_series*)  * sizeof(lxw_chart_series));
+      if (!d)
+	{
+	  printf("error problem allocating more space for chart-series in create-chart-series.");
+	  return;
+	}
+      series = d;
+      maxAllowedSeries+=1;
+    }
   if (seriesCount < maxAllowedSeries &&
       charts)
     {
-      *(series + seriesCount) = chart_add_series(&charts[chartIndex], categories, vals);
+      char* c = NULL;
+      int i=0;
+      while (categories[i] != '\0')
+	{i++;}
+      if (i)
+	{c = categories;}
+      *(series + seriesCount) = chart_add_series(charts[chartIndex], c, vals);
       seriesIndex = seriesCount;
       seriesCount+=1;
     }
@@ -1619,7 +1653,14 @@ void createRowColOpt(unsigned short level,
 void chartSeriesSetName(char* name)
 {
   if (series && charts)
-    {chart_series_set_name(series[seriesIndex], name);}
+    {
+      if (!series[seriesIndex])
+	{
+	  printf("error from chart-series-set-name, please create a series first.");
+	  return;
+	}
+      chart_series_set_name(series[seriesIndex], name);
+    }
 }
 
 void chartSeriesSetLine()
@@ -2576,6 +2617,11 @@ void chartSeriesSetNameRange(char* sheetName)
 {
   if (series)
     {
+      if (!series[seriesIndex])
+	{
+	  printf("error from chart-series-set-name-range, please create a series first.\n");
+	  return;
+	}
       chart_series_set_name_range(series[seriesIndex],
 				  sheetName,
 				  row,

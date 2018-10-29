@@ -38,7 +38,8 @@ ptrdiff_t maxAllowedChartLines = 0;
 ptrdiff_t chartLineCount = 0;
 ptrdiff_t chartLineIndex = 0;
  
-lxw_chart_point* chartPoints;
+lxw_chart_point** chartPoints;
+lxw_chart_point* chartPointHolder;
 ptrdiff_t maxAllowedChartPoints = 0;
 ptrdiff_t chartPointCount = 0;
 ptrdiff_t chartPointIndex = 0;

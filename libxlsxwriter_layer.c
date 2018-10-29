@@ -111,6 +111,8 @@ void chartPointsCleanup()
 {
   if (chartPoints)
     {free(chartPoints);}
+  if (chartPointHolder)
+    {free(chartPointHolder);}
   maxAllowedChartPoints = 0;
   chartPointCount = 0;
   chartPointIndex = 0;
@@ -136,7 +138,7 @@ void chartPatternsCleanup()
      
 void chartLinesCleanup()
 {
-  if (chartLineCount)
+  if (chartLines)
     {free(chartLines);}
   maxAllowedChartLines = 0;
   chartLineCount = 0;
@@ -231,15 +233,18 @@ void initDataValidationLists()
 void initChartFills (ptrdiff_t allocateN)
 {
   chartFillsCleanup();
-  chartFills = calloc(allocateN, sizeof(lxw_chart_fill));
+  chartFills = calloc(allocateN, sizeof(lxw_chart_fill*));
   maxAllowedChartFills = allocateN;
 }
 
 void initChartPoints (ptrdiff_t allocateN)
 {
   chartPointsCleanup();
-  chartPoints = calloc(allocateN, sizeof(lxw_chart_point));
+  chartPoints = calloc(allocateN + 1, sizeof(lxw_chart_point*));
+  chartPointHolder = calloc(allocateN, sizeof(lxw_chart_point));
   maxAllowedChartPoints = allocateN;
+  chartPointCount = 0;
+  chartPointIndex = 0;
 }
 
 void initChartLines (ptrdiff_t allocateN)
@@ -533,36 +538,54 @@ void createDataValidation()
   dataValidationCount+=1;
 }
 
-void createChartPoint(uint none,
-		      double width)
+void createChartPoint()
 {
-  if (chartPointCount < maxAllowedChartPoints
-      && (chartFillIndex < maxAllowedChartFills && chartFillIndex < chartFillCount)
-      && (chartLineIndex < maxAllowedChartLines && chartLineIndex < chartLineCount)
-      && (chartPatternIndex < maxAllowedChartPatterns && chartPatternIndex < chartPatternCount))
+  if (!chartPoints)
     {
-      *(chartPoints + chartPointCount) = (lxw_chart_point){.fill =    &chartFills[chartFillIndex],
-							   .line =    &chartLines[chartLineIndex],
-							   .pattern = &chartPatterns[chartPatternIndex]};
-      chartPointCount+=1;
+      printf("Error: Chart-points not initialized in create-chart-point");
+      return;
     }
-  else
-    {printf("Referencing invalid chart element indices (create-chart-point)\n");}
+  if (!chartLines)
+    {initChartLines(1);}
+  if (!chartPatterns)
+    {initChartPatterns(1);}
+  if (!chartFills)
+    {initChartFills(1);}
+  if (chartPointCount >= maxAllowedChartPoints)
+    {
+      printf("Trying to create more chart points than allotted in create-chart-point");
+      return;
+    }
+  chartPointIndex = chartPointCount;
+  *(chartPointHolder + chartPointIndex)  = (lxw_chart_point){.fill =    &chartFills[chartFillIndex],
+							     .line =    &chartLines[chartLineIndex],
+							     .pattern = &chartPatterns[chartPatternIndex]};
+  *(chartPoints + chartPointIndex) = &chartPointHolder[chartPointCount];
+  chartPointCount+=1;
 }
 
 void createChartFill(int32_t color,
 		     uint8_t none,
 		     uint8_t transparency)
 {
-  if (chartFillCount < maxAllowedChartFills)
+  if (chartFillCount >= maxAllowedChartFills)
     {
-      *(chartFills + chartFillCount) = (lxw_chart_fill) {.color = color, 
-							 .none = none, 
-							 .transparency = transparency};
-      chartFillCount+=1;
+      int x = chartFillCount + 1;
+      lxw_chart_fill* d = malloc(x * sizeof(lxw_chart_fill*));
+      d = realloc(chartFills, x * sizeof(lxw_chart_fill*));
+      if (!d)
+	{
+	  printf("error in create-chart-fill, problem allocating more space. \n");
+	  return;
+	}
+      chartFills = d;
+      maxAllowedChartFills += 1;
     }
-  else
-    {printf("You are trying to allocate more chart fills than alotted.\n");}
+  *(chartFills + chartFillCount) = (lxw_chart_fill) {.color = color, 
+						     .none = none, 
+						     .transparency = transparency};
+  chartFillIndex = chartFillCount;
+  chartFillCount+=1;
 }
 
 void createChartLine(int32_t color,
@@ -570,6 +593,20 @@ void createChartLine(int32_t color,
 		     float width,
 		     uint8_t dashType)
 {
+  if (!chartLines)
+    {initChartLines(1);}
+  if (chartLineCount >= maxAllowedChartLines)
+    {
+      lxw_chart_line* d = malloc(chartLineCount * sizeof(lxw_chart_line));
+      d = realloc(chartLines, chartLineCount * sizeof(lxw_chart_line));
+      if (!d)
+	{
+	  printf("error in create-chart-fill, problem allocating more space. \n");
+	  return;
+	}
+      chartLines = d;
+      maxAllowedChartLines += 1;
+    }
   if (chartLineCount < maxAllowedChartLines)
     {
       *(chartLines + chartLineCount) = (lxw_chart_line){.color     = color,
@@ -589,18 +626,23 @@ void createChartPattern(int32_t fgColor,
 			int32_t bgColor,
 			uint8_t ty)
 {
-  if (chartPatternCount < maxAllowedChartPatterns)
+  if (chartPatternCount >= maxAllowedChartPatterns)
     {
-      *(chartPatterns + chartPatternCount) = (lxw_chart_pattern){.fg_color = fgColor,
-								 .bg_color = bgColor,
-								 .type     = ty};
-      chartPatternCount+=1;
+      ptrdiff_t i = chartPatternCount + 1;
+      lxw_chart_pattern* d = malloc(i * sizeof(lxw_chart_pattern));
+      d = realloc(chartPatterns, i * sizeof(lxw_chart_pattern));
+      if (!d)
+	{
+	  printf("error in create-chart-pattern, problem allocating more space. \n");
+	  return;
+	}
+      chartPatterns = d;
+      maxAllowedChartPatterns += 1;
     }
-  else
-    {
-      printf("Trying to allocate more chart patterns than alotted, or referencing invalid "
-	     "chartPatternIndex (create-chart-pattern)\n");
-    }
+  *(chartPatterns + chartPatternCount) = (lxw_chart_pattern){.fg_color = fgColor,
+							     .bg_color = bgColor,
+							     .type     = ty};
+  chartPatternCount+=1;
 }
 
 void createChartFont(char* name,
@@ -614,6 +656,20 @@ void createChartFont(char* name,
 		     uint8_t charset,
 		     int8_t baseline)
 {
+  if (!chartFonts)
+    {initChartFonts(1);}
+  if (chartFontCount >= maxAllowedChartFonts)
+    {
+      lxw_chart_fill* d = malloc(chartFontCount * sizeof(lxw_chart_font));
+      d = realloc(chartFonts, chartFontCount * sizeof(lxw_chart_font));
+      if (!d)
+	{
+	  printf("error in create-chart-fill, problem allocating more space. \n");
+	  return;
+	}
+      chartFonts = d;
+      maxAllowedChartFonts += 1;
+    }
   if (chartFontCount < maxAllowedChartFonts)
     {
       *(chartFonts + chartFontCount) =
@@ -979,7 +1035,9 @@ void worksheetInsertChart()
 {
   if (worksheet
       && charts)
-    {worksheet_insert_chart(worksheet, row, col, charts[chartIndex]);}
+    {
+      worksheet_insert_chart(worksheet, row, col, charts[chartIndex]);
+    }
 }
 
 void worksheetInsertChartOpt(int x_offset,
@@ -1296,7 +1354,7 @@ void setSubscript()
     {format_set_font_script(formats[formatIndex], LXW_FONT_SUBSCRIPT);}
 }
 
-void setFontColor(uint32_t color)
+void setFontColor(int32_t color)
 {
   if (formats)
     {format_set_font_color(formats[formatIndex], color);}
@@ -1402,43 +1460,43 @@ void setBorderRight(uint8_t border)
     {printf("invalid border type set in set-border-top.");}
 }
 
-void setBgColor(uint32_t color)
+void setBgColor(int32_t color)
 {
   if (formats)
     {format_set_bg_color(formats[formatIndex], color);}
 }
 
-void setFgColor(uint32_t color)
+void setFgColor(int32_t color)
 {
   if (formats)
     {format_set_fg_color(formats[formatIndex], color);}
 }
 
-void setBorderColor(uint32_t color)
+void setBorderColor(int32_t color)
 {
   if (formats)
     {format_set_border_color(formats[formatIndex], color);}
 }
 
-void setBorderBottomColor(uint32_t color)
+void setBorderBottomColor(int32_t color)
 {
   if (formats)
     {format_set_bottom_color(formats[formatIndex], color);}
 }
 
-void setBorderTopColor(uint32_t color)
+void setBorderTopColor(int32_t color)
 {
   if (formats)
     {format_set_top_color(formats[formatIndex], color);}
 }
 
-void setBorderLeftColor(uint32_t color)
+void setBorderLeftColor(int32_t color)
 {
   if (formats[formatIndex])
     {format_set_left_color(formats[formatIndex], color);}
 }
 
-void setBorderRightColor(uint32_t color)
+void setBorderRightColor(int32_t color)
 {
   if (formats)
     {format_set_right_color(formats[formatIndex], color);}
@@ -1607,19 +1665,15 @@ void createChartSeries(char* categories, char* vals)
       series = d;
       maxAllowedSeries+=1;
     }
-  if (seriesCount < maxAllowedSeries &&
-      charts)
-    {
-      char* c = NULL;
-      int i=0;
-      while (categories[i] != '\0')
-	{i++;}
-      if (i)
-	{c = categories;}
-      *(series + seriesCount) = chart_add_series(charts[chartIndex], c, vals);
-      seriesIndex = seriesCount;
-      seriesCount+=1;
-    }
+  char* c = NULL;
+  int i=0;
+  while (categories[i] != '\0')
+    {i++;}
+  if (i)
+    {c = categories;}
+  *(series + seriesCount) = chart_add_series(charts[chartIndex], c, vals);
+  seriesIndex = seriesCount;
+  seriesCount+=1;
 }
 
 void createRowColOpt(unsigned short level,
@@ -1683,7 +1737,7 @@ void chartSeriesSetFill(int chartFillIndex)
 }
 
 void chartSeriesSetPattern(uint8_t patternType,
-			   uint32_t fgColor,
+			   int32_t fgColor,
 			   uint32_t bgColor)
 {
   if (series)
@@ -1724,8 +1778,8 @@ void chartSeriesSetMarkerFill(ptrdiff_t fillIndex)
 }
 
 void chartSeriesSetMarkerPattern(uint8_t patternType,
-				 uint32_t fgColor,
-				 uint32_t bgColor)
+				 int32_t fgColor,
+				 int32_t bgColor)
 {
   if (series)
     {
@@ -1747,9 +1801,11 @@ void chartSeriesInvertIfNegative()
 
 void chartSeriesSetPoints()
 {
-  if (chartPoints &&
-      series)
-    {chart_series_set_points(series[seriesIndex], &chartPoints[chartPointIndex]);}
+  if (series &&
+      chartPoints)
+    {
+      chart_series_set_points(series[seriesIndex], chartPoints);
+    }
 }
 
 void chartSeriesSetSmooth(uint8_t smooth)
@@ -2683,7 +2739,7 @@ void chartsheetSetFirstSheet()
     {chartsheet_set_first_sheet(chartsheet);}
 }
 
-void chartsheetSetTabColor(uint32_t color)
+void chartsheetSetTabColor(int32_t color)
 {
   if (chartsheet)
     {chartsheet_set_tab_color(chartsheet, color);}
@@ -2936,7 +2992,7 @@ void richStringListCleanup()
   maxAllowedRichStrings = 0;
 }
 
-void worksheetSetTabColor(uint32_t color)
+void worksheetSetTabColor(int32_t color)
 {
   if (worksheet)
     {worksheet_set_tab_color(worksheet, color);}

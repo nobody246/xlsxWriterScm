@@ -138,4 +138,49 @@
                      objects
                      no-content
                      no-objects))
+
+(define (alist-ref-or-zero val list)
+  (let ((x (alist-ref val list)))
+    (if x (car x) 0)))
+
+(define (create-pie-chart #!optional
+                          #!key
+                          (chart-title "")
+                          (chart-series-title "")
+                          (chart-series-name-range "")
+                          (chart-series-value-range "")
+                          (chart-point-definitions '())
+                          (rotation 0))
+  (create-chart ($chart-type 'pie))
+  (chart-set-rotation rotation)
+  (let ((c (length chart-point-definitions)))
+    (when (> c 0)
+      (init-chart-points (length chart-point-definitions))
+      (init-chart-fills (length chart-point-definitions))
+      (init-chart-lines (length chart-point-definitions))
+      (init-chart-patterns (length chart-point-definitions))
+      (create-chart-series chart-series-name-range chart-series-value-range)
+      (chart-title-set-name chart-title)
+      (chart-series-set-name chart-series-title)
+      (for-each
+       (lambda(x)
+         (let* ((fill-color         (alist-ref-or-zero 'fill-color       x))
+                (fill-none          (alist-ref-or-zero 'fill-none        x))
+                (fill-transparency  (alist-ref-or-zero 'fill-type        x))
+                (line-color         (alist-ref-or-zero 'line-color       x))
+                (line-none          (alist-ref-or-zero 'line-none        x))
+                (line-width         (alist-ref-or-zero 'line-width       x))
+                (line-dash-type     (alist-ref-or-zero 'line-dash-type   x))
+                (pattern-fg-color   (alist-ref-or-zero 'pattern-fg-color x))
+                (pattern-bg-color   (alist-ref-or-zero 'pattern-bg-color x))
+                (pattern-type       (alist-ref-or-zero 'pattern-type     x)))
+           (create-chart-fill fill-color fill-none fill-transparency)
+           (create-chart-line line-color line-none line-width line-dash-type)
+           (create-chart-pattern pattern-fg-color pattern-bg-color pattern-type)
+           (create-chart-point)))
+       chart-point-definitions)
+      (chart-series-set-points))))
       
+      
+        
+        

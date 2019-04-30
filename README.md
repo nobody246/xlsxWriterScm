@@ -9,6 +9,6 @@ run build.sh, bin folder will contain compiled files,
 (use xlsxwriterscm)
 
 Very basic functionality is good to go and tested, but I will work on documenting and testing everything.
-In the mean time check source files, /test folder for examples and the documentation of libxlsxwriter https://libxlsxwriter.github.io/ 
+In the mean time check source files, the /tests folder for examples as well as the documentation of libxlsxwriter https://libxlsxwriter.github.io/ 
 
-Anything done so far on this is released under same license as libxlsxwriter (FreeBSD).
+This is released under same license as libxlsxwriter (FreeBSD).

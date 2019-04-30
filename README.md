@@ -12,4 +12,4 @@ Very basic functionality is good to go and tested, but I will work on documentin
 In the mean time check source files (particularly libxlsxwriter_layer.c) and https://libxlsxwriter.github.io/
 and expect bugs.
 
-Anything done so far on this is released under same license as libxlsxwriter (FreeBSD); If you use any of it just lemme know and give me some credit.
+Anything done so far on this is released under same license as libxlsxwriter (FreeBSD).

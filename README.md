@@ -1,12 +1,17 @@
 # xlsxwriter-scm
 chicken-scheme libxlsxwriter bindings
 
-uses easyffi, data-structures eggs, build file uses posix and s eggs
+# Requirements
+build file uses posix and s eggs
+built chicken scheme source file uses easyffi, data-structures eggs
 
-utilizes libz, libxslxwriter c libraries.
+The c dependencies are: libz, libxslxwriter c libraries.
 
-run build.sh, bin folder will contain compiled files, 
-(use xlsxwriterscm)
+
+# Usage
+1) with successfully running build.sh after installing all required dependencies, ./bin folder will contain compiled files. 
+
+2) to include in chicken-scheme: (use xlsxwriterscm)
 
 Very basic functionality is good to go and tested, but I will work on documenting and testing everything.
 In the mean time check source files, the /tests folder for examples as well as the documentation of libxlsxwriter https://libxlsxwriter.github.io/ 

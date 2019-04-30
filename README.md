@@ -3,7 +3,9 @@ chicken-scheme libxlsxwriter bindings
 
 # Requirements
 build file uses posix and s eggs
+
 built chicken scheme source file uses easyffi, data-structures eggs
+
 
 The c dependencies are: libz, libxslxwriter c libraries.
 

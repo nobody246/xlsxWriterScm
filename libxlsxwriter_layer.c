@@ -2666,7 +2666,7 @@ void chartSetRotation(uint16_t rotation)
 void chartSetHoleSize(uint8_t size)
 {
   if (charts)
-    {chart_set_size(charts[chartIndex], size);}
+    {chart_set_hole_size(charts[chartIndex], size);}
 }
 
 void chartSeriesSetNameRange(char* sheetName)

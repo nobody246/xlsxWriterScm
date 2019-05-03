@@ -150,8 +150,9 @@
                           (chart-series-name-range "")
                           (chart-series-value-range "")
                           (chart-point-definitions '())
-                          (rotation 0))
-  (create-chart ($chart-type 'pie))
+                          (rotation 0)
+                          (chart-type 'pie))
+  (create-chart ($chart-type chart-type))
   (chart-set-rotation rotation)
   (let ((c (length chart-point-definitions)))
     (when (> c 0)
@@ -181,6 +182,22 @@
        chart-point-definitions)
       (chart-series-set-points))))
       
-      
+(define (create-doughnut-chart #!optional
+                               #!key
+                               (chart-title "")
+                               (chart-series-title "")
+                               (chart-series-name-range "")
+                               (chart-series-value-range "")
+                               (chart-point-definitions '())
+                               (rotation 0))
+  (create-pie-chart chart-title: chart-title
+                    chart-series-title: chart-series-title
+                    chart-series-name-range: chart-series-name-range
+                    chart-series-value-range: chart-series-value-range
+                    chart-point-definitions: chart-point-definitions
+                    rotation: rotation
+                    chart-type: 'doughnut))
+
+
         
         

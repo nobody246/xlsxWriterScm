@@ -26,34 +26,33 @@
 (create-doughnut-chart chart-title: "Popular Doughnut Types"
                        chart-series-title: "Doughnut sales data"
                        chart-series-name-range:  "=Sheet1!$A$2:$A$4"
+                       chart-series-value-range: "=Sheet1!$B$2:$B$4")
+(set-pos 1 4)
+(worksheet-insert-chart)
+
+(create-doughnut-chart chart-title: "Doughnut Chart with custom color"
+                       chart-series-title: "Doughnut sales data"
+                       chart-series-name-range:  "=Sheet1!$A$2:$A$4"
                        chart-series-value-range: "=Sheet1!$B$2:$B$4"
                        chart-point-definitions:
-                        '(((fill-color #xFF0000))
-                         ((fill-color #x00FF00))
-                         ((fill-color #x0000FF))))
-(set-pos 1 4)
+                       '(((fill-color #xFA58D0))
+                         ((fill-color #x61210B))
+                         ((fill-color #xF5F6CE))))
+(set-pos 17 4)
 (worksheet-insert-chart)
 
 (create-doughnut-chart chart-title: "Doughnut Chart with segment rotation"
                        chart-series-title: "Doughnut sales data"
                        chart-series-name-range:  "=Sheet1!$A$2:$A$4"
                        chart-series-value-range: "=Sheet1!$B$2:$B$4"
-                       rotation: 90
-                       chart-point-definitions:
-                        '(((fill-color #xFF0000))
-                         ((fill-color #xFF00FF))
-                         ((fill-color #x0000FF))))
+                       rotation: 90)
 (set-pos 33 4)
 (worksheet-insert-chart)
 
 (create-doughnut-chart chart-title: "Doughnut Chart with options applied."
                        chart-series-title: "Doughnut sales data"
                        chart-series-name-range:  "=Sheet1!$A$2:$A$4"
-                       chart-series-value-range: "=Sheet1!$B$2:$B$4"
-                       chart-point-definitions:
-                        '(((fill-color #xFFF0F0))
-                         ((fill-color #xFF00FF))
-                         ((fill-color #xF000FF))))
+                       chart-series-value-range: "=Sheet1!$B$2:$B$4")
 (chart-set-hole-size 33)
 (set-pos 49 4)
 (worksheet-insert-chart)

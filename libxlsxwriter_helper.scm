@@ -143,10 +143,12 @@
   (let ((x (alist-ref val list)))
     (if x (car x) 0)))
 
+   
+
 (define (create-pie-chart #!optional
                           #!key
-                          (chart-title "")
-                          (chart-series-title "")
+                          (chart-title #f)
+                          (chart-series-title #f)
                           (chart-series-name-range "")
                           (chart-series-value-range "")
                           (chart-point-definitions '())
@@ -154,15 +156,17 @@
                           (chart-type 'pie))
   (create-chart ($chart-type chart-type))
   (chart-set-rotation rotation)
+  (create-chart-series chart-series-name-range chart-series-value-range)
+  (when chart-title
+    (chart-title-set-name chart-title))
+  (when chart-series-title
+    (chart-series-set-name chart-series-title))
   (let ((c (length chart-point-definitions)))
     (when (> c 0)
       (init-chart-points (length chart-point-definitions))
       (init-chart-fills (length chart-point-definitions))
       (init-chart-lines (length chart-point-definitions))
       (init-chart-patterns (length chart-point-definitions))
-      (create-chart-series chart-series-name-range chart-series-value-range)
-      (chart-title-set-name chart-title)
-      (chart-series-set-name chart-series-title)
       (for-each
        (lambda(x)
          (let* ((fill-color         (alist-ref-or-zero 'fill-color       x))
@@ -177,15 +181,16 @@
                 (pattern-type       (alist-ref-or-zero 'pattern-type     x)))
            (create-chart-fill fill-color fill-none fill-transparency)
            (create-chart-line line-color line-none line-width line-dash-type)
-           (create-chart-pattern pattern-fg-color pattern-bg-color pattern-type)
+           (when (> pattern-type 0)
+             (create-chart-pattern pattern-fg-color pattern-bg-color pattern-type))
            (create-chart-point)))
        chart-point-definitions)
       (chart-series-set-points))))
       
 (define (create-doughnut-chart #!optional
                                #!key
-                               (chart-title "")
-                               (chart-series-title "")
+                               (chart-title #f)
+                               (chart-series-title #f)
                                (chart-series-name-range "")
                                (chart-series-value-range "")
                                (chart-point-definitions '())

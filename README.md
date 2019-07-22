@@ -17,4 +17,4 @@ The c dependencies are: libz, libxslxwriter c libraries.
 
 Very basic functionality is good to go, but this will remain a work in progress, For reference check the /tests folder for examples as well as the documentation of libxlsxwriter https://libxlsxwriter.github.io/ 
 
-This is released under same license as libxlsxwriter (FreeBSD).
+This is released under same license as libxlsxwriter (BSD).

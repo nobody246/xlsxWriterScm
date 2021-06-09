@@ -182,7 +182,10 @@
            (create-chart-fill fill-color fill-none fill-transparency)
            (create-chart-line line-color line-none line-width line-dash-type)
            (when (> pattern-type 0)
-             (create-chart-pattern pattern-fg-color pattern-bg-color pattern-type))
+             (create-chart-pattern
+              pattern-fg-color
+              pattern-bg-color
+              pattern-type))
            (create-chart-point)))
        chart-point-definitions)
       (chart-series-set-points))))

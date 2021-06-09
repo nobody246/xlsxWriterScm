@@ -68,6 +68,7 @@
   (define chart-type
     (list (cons 'none                     ($n LXW_CHART_NONE))
           (cons 'area                     ($n LXW_CHART_AREA))
+          (cons 'area-stacked             ($n LXW_CHART_AREA_STACKED))
           (cons 'percent-stacked          ($n LXW_CHART_AREA_STACKED_PERCENT))
           (cons 'bar                      ($n LXW_CHART_BAR))
           (cons 'bar-stacked              ($n LXW_CHART_BAR_STACKED))

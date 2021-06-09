@@ -5,7 +5,7 @@ uint32_t              row = 0;
 unsigned short        col = 0;
 
 
-lxw_chart**            charts;
+lxw_chart**          charts;
 ptrdiff_t maxAllowedCharts = 0;
 ptrdiff_t chartCount = 0;
 ptrdiff_t chartIndex = 0;
@@ -99,3 +99,5 @@ ptrdiff_t colOptionCount = 0;
 ptrdiff_t colOptionIndex = 0;
 ptrdiff_t maxAllowedColOptions = 0;
 
+void initDataValidations(ptrdiff_t allocateN);
+void chartLegendDeleteSeries();

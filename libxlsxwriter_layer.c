@@ -660,7 +660,7 @@ void createChartFont(char* name,
     {initChartFonts(1);}
   if (chartFontCount >= maxAllowedChartFonts)
     {
-      lxw_chart_fill* d = malloc(chartFontCount * sizeof(lxw_chart_font));
+      lxw_chart_font* d = malloc(chartFontCount * sizeof(lxw_chart_font));
       d = realloc(chartFonts, chartFontCount * sizeof(lxw_chart_font));
       if (!d)
 	{
@@ -1249,15 +1249,15 @@ void worksheetSetHPageBreaks()
 {
   if (worksheet &&
       rowNumbers)
-    {worksheet_set_h_pagebreaks(worksheet, colNumbers);}
-  colNumberCleanup();
+    {worksheet_set_h_pagebreaks(worksheet, rowNumbers);}
+  rowNumberCleanup();
 }
 
 void worksheetSetVPageBreaks()
 {
   if (worksheet &&
       colNumbers)
-    {worksheet_set_v_pagebreaks(worksheet, rowNumbers);}
+    {worksheet_set_v_pagebreaks(worksheet, colNumbers);}
   colNumberCleanup();
 }
 
@@ -1601,7 +1601,7 @@ void workbookGetWorksheetByName(char* name)
 void workbookValidateWorksheetName(char* name)
 {
   if (workbook)
-    {workbook_validate_worksheet_name(workbook, name);}
+    {workbook_validate_sheet_name(workbook, name);}
 }
 
 void setCol(unsigned short colNum)
@@ -1629,8 +1629,11 @@ void createChart(unsigned short chartType)
     {initCharts(1);}
   if (chartCount >= maxAllowedCharts)
     {
-      lxw_chart* d = malloc(chartCount * sizeof(lxw_chart*) * sizeof(lxw_chart));
-      d = realloc(charts, chartCount * sizeof(lxw_chart*) * sizeof(lxw_chart));
+      size_t s = chartCount *
+	sizeof(lxw_chart*) *
+        sizeof(lxw_chart);
+      lxw_chart** d = malloc(s);
+      d = realloc(charts, s);
       if (!d)
 	{
 	  printf("error: problem allocating more charts in create-chart");
@@ -1643,7 +1646,9 @@ void createChart(unsigned short chartType)
       && charts
       && workbook)
     {
-      *(charts + chartCount) = workbook_add_chart(workbook, (lxw_chart_type) chartType);
+      *(charts + chartCount) =
+	workbook_add_chart(workbook,
+			   (lxw_chart_type) chartType);
       chartIndex = chartCount;
       chartCount+=1;
     }
@@ -1882,8 +1887,9 @@ void chartSeriesSetLabelsFont(char* fontName)
 {
   if (series)
     {
-      chart_series_set_font_name(series[seriesIndex],
-				 fontName);
+      lxw_chart_font font = {.name=fontName, .color=LXW_COLOR_BLACK};
+      chart_series_set_labels_font(series[seriesIndex],
+				   &font);
     }
 }
 
@@ -1968,11 +1974,11 @@ void chartSeriesSetErrorBars(uint8_t ty,
 {
   if (series)
     {
-      chart_series_set_set_error_bars((horizontal > 0) ?
-				      series[seriesIndex]->x_error_bars :
-				      series[seriesIndex]->y_error_bars,
-				      ty,
-				      val);
+      chart_series_set_error_bars((horizontal > 0) ?
+				  series[seriesIndex]->x_error_bars :
+				  series[seriesIndex]->y_error_bars,
+				  ty,
+				  val);
     }
 }
 
@@ -1980,7 +1986,7 @@ void chartSeriesSetErrorBarsDirection(uint8_t dir)
 {
   if (seriesErrorBars)
     {
-      set_chart_series_error_bars_direction(seriesErrorBars[seriesErrorBarsIndex],
+      chart_series_set_error_bars_direction(seriesErrorBars[seriesErrorBarsIndex],
 					    dir);
     }
 }
@@ -1989,7 +1995,7 @@ void chartSeriesSetErrorBarsEndCap(uint8_t endCap)
 {
   if (seriesErrorBars)
     {
-      set_chart_series_error_bars_endcap(seriesErrorBars[seriesErrorBarsIndex],
+      chart_series_set_error_bars_endcap(seriesErrorBars[seriesErrorBarsIndex],
 					 endCap);
     }
 }
@@ -1999,8 +2005,8 @@ void chartSeriesSetErrorBarsLine()
   if (seriesErrorBars &&
       chartLines)
     {
-      set_chart_series_error_bars_endcap(seriesErrorBars[seriesErrorBarsIndex],
-					 chartLines[chartLineIndex]);
+      chart_series_set_error_bars_line(seriesErrorBars[seriesErrorBarsIndex],
+				       &chartLines[chartLineIndex]);
     }
 }
 
@@ -2128,14 +2134,14 @@ void chartXAxisSetLine()
 {
   if (charts &&
       chartLines)
-    {chart_axis_set_num_format(charts[chartIndex]->x_axis, &chartLines[chartLineIndex]);}
+    {chart_axis_set_line(charts[chartIndex]->x_axis, &chartLines[chartLineIndex]);}
 }
 
 void chartYAxisSetLine()
 {
   if (charts &&
       chartLines)
-    {chart_axis_set_num_format(charts[chartIndex]->y_axis, &chartLines[chartLineIndex]);}
+    {chart_axis_set_line(charts[chartIndex]->y_axis, &chartLines[chartLineIndex]);}
 }
 
 void chartXAxisSetFill()
@@ -2231,13 +2237,13 @@ void chartYAxisSetPosition(uint8_t pos)
 void chartXAxisSetLabelPosition(uint8_t pos)
 {
   if (charts)
-    {chart_axis_set_position_label(charts[chartIndex]->x_axis, pos);}
+    {chart_axis_set_label_position(charts[chartIndex]->x_axis, pos);}
 }
 
 void chartYAxisSetLabelPosition(uint8_t pos)
 {
   if (charts)
-    {chart_axis_set_position_label(charts[chartIndex]->x_axis, pos);}
+    {chart_axis_set_label_position(charts[chartIndex]->x_axis, pos);}
 }
 
 void chartXAxisSetLabelAlign(uint8_t align)
@@ -2388,53 +2394,53 @@ void chartYAxisSetDisplayUnitsVisible(uint8_t visible)
 void chartXAxisSetMajorGridlinesVisible(uint8_t visible)
 {
   if (charts)
-    {chart_axis_set_major_gridlines_visible(charts[chartIndex]->x_axis, visible);}
+    {chart_axis_major_gridlines_set_visible(charts[chartIndex]->x_axis, visible);}
 }
 
 void chartYAxisSetMajorGridlinesVisible(uint8_t visible)
 {
   if (charts)
-    {chart_axis_set_major_gridlines_visible(charts[chartIndex]->y_axis, visible);}
+    {chart_axis_major_gridlines_set_visible(charts[chartIndex]->y_axis, visible);}
 }
 
 void chartXAxisSetMinorGridlinesVisible(uint8_t visible)
 {
   if (charts)
-    {chart_axis_set_minor_gridlines_visible(charts[chartIndex]->x_axis, visible);}
+    {chart_axis_minor_gridlines_set_visible(charts[chartIndex]->x_axis, visible);}
 }
 
 void chartYAxisSetMinorGridlinesVisible(uint8_t visible)
 {
   if (charts)
-    {chart_axis_set_minor_gridlines_visible(charts[chartIndex]->y_axis, visible);}
+    {chart_axis_minor_gridlines_set_visible(charts[chartIndex]->y_axis, visible);}
 }
 
 void chartXAxisSetMajorGridlinesSetLine()
 {
   if (charts
       && chartLines)
-    {chart_axis_set_major_gridlines_set_line(charts[chartIndex]->x_axis, &chartLines[chartLineIndex]);}
+    {chart_axis_major_gridlines_set_line(charts[chartIndex]->x_axis, &chartLines[chartLineIndex]);}
 }
 
 void chartYAxisSetMajorGridlinesSetLine()
 {
   if (charts
       && chartLines)
-    {chart_axis_set_major_gridlines_set_line(charts[chartIndex]->y_axis, &chartLines[chartLineIndex]);}
+    {chart_axis_major_gridlines_set_line(charts[chartIndex]->y_axis, &chartLines[chartLineIndex]);}
 }
 
 void chartXAxisSetMinorGridlinesSetLine()
 {
   if (charts
       && chartLines)
-    {chart_axis_set_minor_gridlines_set_line(charts[chartIndex]->x_axis, &chartLines[chartLineIndex]);}
+    {chart_axis_minor_gridlines_set_line(charts[chartIndex]->x_axis, &chartLines[chartLineIndex]);}
 }
 
 void chartYAxisSetMinorGridlinesSetLine()
 {
   if (charts
       && chartLines)
-    {chart_axis_set_minor_gridlines_set_line(charts[chartIndex]->y_axis, &chartLines[chartLineIndex]);}
+    {chart_axis_minor_gridlines_set_line(charts[chartIndex]->y_axis, &chartLines[chartLineIndex]);}
 }
 
 void chartTitleSetName(char* name)
@@ -2470,7 +2476,7 @@ void chartTitleOff()
 void chartLegendSetPosition(uint8_t pos)
 {
   if (charts)
-    {chart_title_set_position(charts[chartIndex], pos);}
+    {chart_legend_set_position(charts[chartIndex], pos);}
 }
 
 void chartLegendSetFont()
@@ -2498,7 +2504,7 @@ void chartLegendDeleteSeries()
   if (charts &&
       deleteSeries)
     {
-      chart_legend_delete_series(series[seriesIndex], &deleteSeries);
+      chart_legend_delete_series(charts[chartIndex], deleteSeries);
       free(deleteSeries);
     }
 }
@@ -2590,10 +2596,10 @@ void chartSetUpBarsLineAndFill()
 	  upBarFill)
 	{
 	  chart_set_up_down_bars_format(charts[chartIndex],
-					&upBarLine,
-					&upBarFill,
-					&downBarLine,
-					&downBarFill);
+					upBarLine,
+					upBarFill,
+					downBarLine,
+					downBarFill);
 	}
     }
   
@@ -2611,10 +2617,10 @@ void chartSetDownBarsLineAndFill()
 	  downBarFill)
 	{
 	  chart_set_up_down_bars_format(charts[chartIndex],
-					&upBarLine,
-					&upBarFill,
-					&downBarLine,
-					&downBarFill);
+					upBarLine,
+					upBarFill,
+					downBarLine,
+					downBarFill);
 	}
     }
 }
@@ -2711,7 +2717,7 @@ void chartsheetSetChart()
 {
   if (charts &&
       chartsheet)
-    {chartsheet_set_chart(charts[chartIndex], chartsheet);}
+    {chartsheet_set_chart(chartsheet, charts[chartIndex]);}
 }
 
 

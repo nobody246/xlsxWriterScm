@@ -44,6 +44,7 @@ void resizeDataValidations()
   if (!h)
     {
       printf("error: There was problem allocating data-validation-list-char-count space in create-data-validation.\n");
+      return;
     }
   dataValidationListCharCount = h;
 
@@ -51,6 +52,7 @@ void resizeDataValidations()
   if (!y)
     {
       printf("error: There was problem allocating data-validation-list-str-index space in create-data-validation.\n");
+      return;
     }
   dataValidationListStrIndex = y;
   maxAllowedDataValidations+=1;

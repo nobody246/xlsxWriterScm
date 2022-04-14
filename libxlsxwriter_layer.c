@@ -502,7 +502,7 @@ void setValidationInputMessage(char* message)
 void setValidationErrorTitle(char* title)
 {
   dataValidationsBoundsCheck();
-  int i;
+  int i = 1;
   while (title[i] != '\0')
       {i+=1;}
   dataValidations[dataValidationIndex].error_title = malloc(i * sizeof(char));
@@ -512,7 +512,7 @@ void setValidationErrorTitle(char* title)
 void setValidationErrorMessage(char* message)
 {
   dataValidationsBoundsCheck();
-  int i;
+  int i = 1;
   while (message[i] != '\0')
       {i+=1;}
   dataValidations[dataValidationIndex].error_message = malloc(i * sizeof(char));
@@ -2800,13 +2800,7 @@ void worksheetProtect(char* pswd,
 	 .objects = objects,
 	 .no_content = no_content,
 	 .no_objects = no_objects};
-      ptrdiff_t i = 0;
-      while (pswd[i] != '\0')
-	{i+=1;}
-      const char* x = calloc(i, sizeof(char));
-      if (pswd != "")
-	{x = pswd;}
-      worksheet_protect(worksheet, x, &o);
+      worksheet_protect(worksheet, pswd ? pswd : "", &o);
     }
 }
 
@@ -2849,13 +2843,7 @@ void chartsheetProtect(char* pswd,
 	 .objects = objects,
 	 .no_content = no_content,
 	 .no_objects = no_objects};
-      ptrdiff_t i = 0;
-      while (pswd[i] != '\0')
-	{i+=1;}
-      const char* x = calloc(i, sizeof(char));
-      if (pswd != "")
-	{x = pswd;}
-      chartsheet_protect(chartsheet, x, &o);
+      chartsheet_protect(chartsheet, pswd ? pswd : "", &o);
     }
 }
 
@@ -2964,7 +2952,7 @@ void createRichStringFragment(char* stringChunk)
   if (richStringFragments &&
       richStringFragmentCount < maxAllowedRichStringFragments)
     {
-      int i = 0;
+      int i = 1;
       while (stringChunk[i] != '\0')
 	{i+=1;}
       *(rsFragmentStrings + richStringFragmentCount) = malloc(i * sizeof(char));

@@ -266,7 +266,7 @@ void initChartPatterns (ptrdiff_t allocateN)
 void initSeries(ptrdiff_t allocateN)
 {
   seriesCleanup();
-  series = calloc(allocateN, sizeof(lxw_chart_series*) * sizeof(lxw_chart_series));
+  series = calloc(allocateN, sizeof(lxw_chart_series*));
   maxAllowedSeries = allocateN;
 }
 

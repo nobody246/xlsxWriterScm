@@ -573,8 +573,8 @@ void createChartFill(int32_t color,
   if (chartFillCount >= maxAllowedChartFills)
     {
       int x = chartFillCount + 1;
-      lxw_chart_fill* d = malloc(x * sizeof(lxw_chart_fill));
-      d = realloc(chartFills, x * sizeof(lxw_chart_fill*));
+      lxw_chart_fill* d = NULL;// = malloc(x * sizeof(lxw_chart_fill));
+      d = realloc(chartFills, x * sizeof(lxw_chart_fill));
       if (!d)
 	{
 	  printf("error in create-chart-fill, problem allocating more space. \n");
@@ -599,7 +599,7 @@ void createChartLine(int32_t color,
     {initChartLines(1);}
   if (chartLineCount >= maxAllowedChartLines)
     {
-      lxw_chart_line* d = malloc(chartLineCount * sizeof(lxw_chart_line));
+      lxw_chart_line* d = NULL;// = malloc(chartLineCount * sizeof(lxw_chart_line));
       d = realloc(chartLines, chartLineCount * sizeof(lxw_chart_line));
       if (!d)
 	{
@@ -631,7 +631,7 @@ void createChartPattern(int32_t fgColor,
   if (chartPatternCount >= maxAllowedChartPatterns)
     {
       ptrdiff_t i = chartPatternCount + 1;
-      lxw_chart_pattern* d = malloc(i * sizeof(lxw_chart_pattern));
+      lxw_chart_pattern* d = NULL;// = malloc(i * sizeof(lxw_chart_pattern));
       d = realloc(chartPatterns, i * sizeof(lxw_chart_pattern));
       if (!d)
 	{
@@ -662,7 +662,7 @@ void createChartFont(char* name,
     {initChartFonts(1);}
   if (chartFontCount >= maxAllowedChartFonts)
     {
-      lxw_chart_font* d = malloc(chartFontCount * sizeof(lxw_chart_font));
+      lxw_chart_font* d = NULL;// = malloc(chartFontCount * sizeof(lxw_chart_font));
       d = realloc(chartFonts, chartFontCount * sizeof(lxw_chart_font));
       if (!d)
 	{

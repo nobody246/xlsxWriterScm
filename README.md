@@ -15,6 +15,6 @@ The c dependencies are: libz, libxslxwriter c libraries.
 
 2) to include in chicken-scheme: (use xlsxwriterscm)
 
-Basic functionality seems good to go, For reference check the /tests folder for examples as well as the documentation of libxlsxwriter https://libxlsxwriter.github.io/ 
+Basic functionality seems good to go but I still find things to fix continuously, For reference check the /tests folder for examples as well as the documentation of libxlsxwriter https://libxlsxwriter.github.io/.
 
 This is released under same license as libxlsxwriter (BSD).

@@ -98,6 +98,11 @@ void dataValidationsCleanup()
 {
   if (dataValidations)
     {free(dataValidations);}
+  for (int x = 0; x<dataValidationCount; x++)
+    {
+      if (dataValidationList[x])
+	{free(dataValidationList[x]);}
+    }
   if (dataValidationList)
     {free(dataValidationList);}
   maxAllowedDataValidations = 0;
@@ -209,17 +214,17 @@ void initDataValidations (ptrdiff_t allocateN)
 {
   dataValidationsCleanup();
   dataValidations = calloc(allocateN, sizeof(lxw_data_validation));
-  dataValidationList = calloc(allocateN, sizeof(char**) * 255 * 127);
+  dataValidationList = calloc(allocateN, sizeof(char**) * 255);
   int i;
   int x;
   for (i = 0; i < allocateN; i++)
     {
       //127 total possible list entries, 255 character count which includes commas
-      *(dataValidationList + i) = calloc(255 * 127, sizeof(char*));
-      for (x = 0; x < 127; x++)
-	{
-	  *(dataValidationList + i + x) = calloc(255, sizeof(char));
-	}
+      *(dataValidationList + i) = calloc(255 * 127, sizeof(char*) + sizeof(char));
+      //for (x = 0; x < 127; x++)
+      //{
+      //  *(dataValidationList + i + x) = calloc(255, sizeof(char));
+      //}
     }
   dataValidationListCharCount = calloc(allocateN, sizeof(ptrdiff_t));
   dataValidationListStrIndex = calloc(allocateN, sizeof(ptrdiff_t));
@@ -236,7 +241,7 @@ void initDataValidationLists()
 void initChartFills (ptrdiff_t allocateN)
 {
   chartFillsCleanup();
-  chartFills = calloc(allocateN, sizeof(lxw_chart_fill*));
+  chartFills = calloc(allocateN, sizeof(lxw_chart_fill));
   maxAllowedChartFills = allocateN;
 }
 
@@ -2981,6 +2986,8 @@ void richStringListCleanup()
 {
   if (richStringList)
     {free(richStringList);}
+  for (int i = 0; i<richStringCount; i++)
+    {free(rsFragmentStrings[i]);}
   if (rsFragmentStrings)
     {free(rsFragmentStrings);}
   richStringCount = 0;

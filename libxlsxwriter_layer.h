@@ -58,6 +58,8 @@ lxw_data_validation* dataValidations;
 ptrdiff_t maxAllowedDataValidations = 0;
 ptrdiff_t dataValidationCount = 0;
 ptrdiff_t dataValidationIndex = 0;
+char** dataValStrs;
+ptrdiff_t dataValStrInd = 0;
 
 char*** dataValidationList;
 ptrdiff_t* dataValidationListCharCount;

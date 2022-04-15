@@ -388,7 +388,7 @@ void setValidationValueFormula(char* form)
   dataValidationsBoundsCheck();
   int i = 1;
   while (form[i] != '\0')
-      {i+=1;}
+    {i+=1;}
   dataValidations[dataValidationIndex].value_formula = malloc(i  * sizeof(char));
   strcpy(dataValidations[dataValidationIndex].value_formula, form);
 }
@@ -484,7 +484,7 @@ void setValidationInputTitle(char* title)
   dataValidationsBoundsCheck();
   int i = 1;
   while (title[i] != '\0')
-      {i+=1;}
+    {i+=1;}
   dataValidations[dataValidationIndex].input_title = malloc(i * sizeof(char));
   strcpy(dataValidations[dataValidationIndex].input_title, title);
 }
@@ -494,7 +494,7 @@ void setValidationInputMessage(char* message)
   dataValidationsBoundsCheck();
   int i = 1;
   while (message[i] != '\0')
-      {i+=1;}
+    {i+=1;}
   dataValidations[dataValidationIndex].input_message = malloc(i * sizeof(char));
   strcpy(dataValidations[dataValidationIndex].input_message, message);
 }
@@ -504,7 +504,7 @@ void setValidationErrorTitle(char* title)
   dataValidationsBoundsCheck();
   int i = 1;
   while (title[i] != '\0')
-      {i+=1;}
+    {i+=1;}
   dataValidations[dataValidationIndex].error_title = malloc(i * sizeof(char));
   strcpy(dataValidations[dataValidationIndex].error_title, title);
 }
@@ -514,7 +514,7 @@ void setValidationErrorMessage(char* message)
   dataValidationsBoundsCheck();
   int i = 1;
   while (message[i] != '\0')
-      {i+=1;}
+    {i+=1;}
   dataValidations[dataValidationIndex].error_message = malloc(i * sizeof(char));
   strcpy(dataValidations[dataValidationIndex].error_message, message);
 }
@@ -573,7 +573,7 @@ void createChartFill(int32_t color,
   if (chartFillCount >= maxAllowedChartFills)
     {
       int x = chartFillCount + 1;
-      lxw_chart_fill* d = malloc(x * sizeof(lxw_chart_fill*));
+      lxw_chart_fill* d = malloc(x * sizeof(lxw_chart_fill));
       d = realloc(chartFills, x * sizeof(lxw_chart_fill*));
       if (!d)
 	{
@@ -696,7 +696,7 @@ void addToRowNumberList(uint32_t val)
 {
   if (!rowNumbers)
     {initRowNumbers(1);}
-   if (rowNumberCount >= maxAllowedRowNumbers)
+  if (rowNumberCount >= maxAllowedRowNumbers)
     {
       lxw_row_t* d = malloc(rowNumberCount * sizeof(lxw_row_t));
       d = realloc(rowNumbers, rowNumberCount * sizeof(lxw_row_t));

@@ -1632,11 +1632,9 @@ void createChart(unsigned short chartType)
     {initCharts(1);}
   if (chartCount >= maxAllowedCharts)
     {
-      size_t s = chartCount *
-	sizeof(lxw_chart*) *
-        sizeof(lxw_chart);
+      size_t s = chartCount * (sizeof(lxw_chart*) + sizeof(lxw_chart));
       lxw_chart** d = NULL;
-      d = realloc(charts, s * sizeof(lxw_chart*));
+      d = realloc(charts, s);
       if (!d)
 	{
 	  printf("error: problem allocating more charts in create-chart");
@@ -1664,7 +1662,7 @@ void createChartSeries(char* categories, char* vals)
   if (seriesCount >= maxAllowedSeries)
     {
       lxw_chart_series** d = NULL;
-      d = realloc(series, seriesCount * sizeof(lxw_chart_series*)  * sizeof(lxw_chart_series));
+      d = realloc(series, seriesCount * (sizeof(lxw_chart_series*) + sizeof(lxw_chart_series)));
       if (!d)
 	{
 	  printf("error problem allocating more space for chart-series in create-chart-series.");

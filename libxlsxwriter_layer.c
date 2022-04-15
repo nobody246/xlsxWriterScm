@@ -25,7 +25,7 @@ void resizeDataValidations()
 
   char*** d = NULL;
   //127 total possible list entries, 255 character count which includes commas
-  d = realloc(dataValidationList, dataValidationCount * sizeof(char**) * 255);
+  d = realloc(dataValidationList, dataValidationCount * sizeof(char**) * 127);
   if (!d)
     {
       printf("error: There was a problem with allocating more data validation list space in create-data-validation.\n");
@@ -209,7 +209,7 @@ void initDataValidations (ptrdiff_t allocateN)
 {
   dataValidationsCleanup();
   dataValidations = calloc(allocateN, sizeof(lxw_data_validation));
-  dataValidationList = calloc(allocateN, sizeof(char**) * 255);
+  dataValidationList = calloc(allocateN, sizeof(char**) * 127);
   int i;
   int x;
   for (i = 0; i < allocateN; i++)

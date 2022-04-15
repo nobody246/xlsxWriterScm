@@ -21,8 +21,15 @@ void resizeDataValidations()
       printf("error: There was a problem with allocating more data validations in create-data-validation.\n");
       return;
     }
+  v[dataValidationIndex] = (lxw_data_validation){
+    .value_formula="",
+    .minimum_formula="",
+    .maximum_formula="",
+    .input_title="",
+    .input_message="",
+    .error_title="",
+    .error_message=""};
   dataValidations = v;
-
   char*** d = NULL;
   //127 total possible list entries, 255 character count which includes commas
   d = realloc(dataValidationList, dataValidationCount * sizeof(char**) * 127);
@@ -68,7 +75,10 @@ void dataValidationsBoundsCheck()
 void formatsCleanup()
 {
   if (formats)
-    {free(formats);}
+    {
+      free(formats);
+      formats = NULL;
+    }
   maxAllowedFormats = 0;
   formatIndex = 0;
   formatCount = 0;
@@ -78,44 +88,84 @@ void formatsCleanup()
 void rowNumberCleanup()
 {
   if (rowNumbers)
-    {free(rowNumbers);}
+    {
+      free(rowNumbers);
+      rowNumbers = NULL;
+    }
   maxAllowedRowNumbers = 0;
 }
 
 void colNumberCleanup()
 {
   if (colNumbers)
-    {free(colNumbers);}
+    {
+      free(colNumbers);
+      colNumbers = NULL;
+    }
   maxAllowedColNumbers = 0;
 }
 
 void dataValidationsCleanup()
 {
   if (dataValidations)
-    {free(dataValidations);}
+    {
+      for (int x = 0; x<=dataValStrInd; x++)
+	{
+	  free(dataValStrs[x]);
+	  dataValStrs[x] = NULL;
+	}
+      free(dataValidations);
+      dataValidations = NULL;
+      if (dataValStrs)
+	{
+	  free(dataValStrs);
+	  dataValStrs = NULL;
+	}
+    }
   for (int x = 0; x<dataValidationCount; x++)
     {
       if (dataValidationList[x])
 	{free(dataValidationList[x]);}
+      dataValidationList[x] = NULL;
     }
   if (dataValidationList)
-    {free(dataValidationList);}
+    {
+      free(dataValidationList);
+      dataValidationList = NULL;
+    }
   maxAllowedDataValidations = 0;
   dataValidationCount = 0;
   dataValidationIndex = 0;
   if (dataValidationListCharCount)
-    {free(dataValidationListCharCount);}
+    {
+      free(dataValidationListCharCount);
+      dataValidationListCharCount = NULL;
+    }
   if (dataValidationListStrIndex != NULL)
-    {free(dataValidationListStrIndex);}
+    {
+      free(dataValidationListStrIndex);
+      dataValidationListStrIndex = NULL;
+    }
   dataValidationListCount = 0;
 }
 
 void chartPointsCleanup()
 {
+  for (int x = 0; x<chartPointCount; x++)
+    {
+      //free(chartPoints[x]); //segfaults?
+      chartPoints[x] = NULL;
+    }
   if (chartPoints)
-    {free(chartPoints);}
+    {
+      free(chartPoints);
+      chartPoints = NULL;
+    }
   if (chartPointHolder)
-    {free(chartPointHolder);}
+    {
+      free(chartPointHolder);
+      chartPointHolder = NULL;
+    }
   maxAllowedChartPoints = 0;
   chartPointCount = 0;
   chartPointIndex = 0;
@@ -124,7 +174,10 @@ void chartPointsCleanup()
 void chartFillsCleanup()
 {
   if (chartFills)
-    {free(chartFills);}
+    {
+      free(chartFills);
+      chartFills = NULL;
+    }
   maxAllowedChartFills = 0;
   chartFillCount = 0;
   chartFillIndex = 0;
@@ -133,7 +186,10 @@ void chartFillsCleanup()
 void chartPatternsCleanup()
 {
   if (chartPatterns)
-    {free(chartPatterns);}
+    {
+      free(chartPatterns);
+      chartPatterns = NULL;
+    }
   maxAllowedChartPatterns = 0;
   chartPatternCount = 0;
   chartPatternIndex = 0;
@@ -142,7 +198,10 @@ void chartPatternsCleanup()
 void chartLinesCleanup()
 {
   if (chartLines)
-    {free(chartLines);}
+    {
+      free(chartLines);
+      chartLines = NULL;
+    }
   maxAllowedChartLines = 0;
   chartLineCount = 0;
   chartLineIndex = 0;
@@ -150,8 +209,19 @@ void chartLinesCleanup()
 
 void seriesCleanup()
 {
+  for (int x = 0; x<seriesCount; x++)
+    {
+      if (series[x])
+	{
+	  //free(series[x]); //segfaults?
+	  series[x] = NULL;
+	}
+    }
   if (series)
-    {free(series);}
+    {
+      free(series);
+      series = NULL;
+    }
   maxAllowedSeries = 0;
   seriesCount = 0;
   seriesIndex = 0;
@@ -159,8 +229,16 @@ void seriesCleanup()
 
 void chartsCleanup()
 {
+  for (int x = 0; x<chartCount; x++)
+    {
+      //free(charts[x]); //segfaults?
+      charts[x] = NULL;
+    }  
   if (charts)
-    {free(charts);}
+    {
+      free(charts);
+      charts = NULL;
+    }
   maxAllowedCharts = 0;
   chartCount = 0;
   chartIndex = 0;
@@ -169,7 +247,10 @@ void chartsCleanup()
 void seriesErrorBarsCleanup()
 {
   if (seriesErrorBars)
-    {free(seriesErrorBars);}
+    {
+      free(seriesErrorBars);
+      seriesErrorBars = NULL;
+    }
   maxAllowedSeriesErrorBars = 0;
   seriesErrorBarsCount = 0;
   seriesErrorBarsIndex = 0;
@@ -178,7 +259,10 @@ void seriesErrorBarsCleanup()
 void chartFontsCleanup()
 {
   if (chartFonts)
-    {free(chartFonts);}
+    {
+      free(chartFonts);
+      chartFonts = NULL;
+    }
   maxAllowedChartFonts = 0;
   chartFontCount = 0;
   chartFontIndex = 0;
@@ -209,6 +293,14 @@ void initDataValidations (ptrdiff_t allocateN)
 {
   dataValidationsCleanup();
   dataValidations = calloc(allocateN, sizeof(lxw_data_validation));
+  dataValidations[0] = (lxw_data_validation){
+    .value_formula="",
+    .minimum_formula="",
+    .maximum_formula="",
+    .input_title="",
+    .input_message="",
+    .error_title="",
+    .error_message=""};
   dataValidationList = calloc(allocateN, sizeof(char**) * 127);
   int i;
   int x;
@@ -267,7 +359,7 @@ void initChartPatterns (ptrdiff_t allocateN)
 void initSeries(ptrdiff_t allocateN)
 {
   seriesCleanup();
-  series = calloc(allocateN, sizeof(lxw_chart_series*));
+  series = calloc(allocateN, (sizeof(lxw_chart_series*) + sizeof(lxw_chart_series)));
   maxAllowedSeries = allocateN;
 }
 
@@ -312,8 +404,8 @@ void createDataValidationListEntry(char* dvl)
       return;
     }
   int i = 0;
-  while (dvl[i] != '\0')
-    {i+=1;}
+  while (dvl[i])
+    {i++;}
   if ((i > 254) ||
       (dataValidationListCharCount[dataValidationIndex] + i) > 254)
     {
@@ -388,10 +480,13 @@ void setValidationValueFormula(char* form)
 {
   dataValidationsBoundsCheck();
   int i = 1;
-  while (form[i] != '\0')
-    {i+=1;}
-  dataValidations[dataValidationIndex].value_formula = malloc(i  * sizeof(char));
-  strcpy(dataValidations[dataValidationIndex].value_formula, form);
+  while (form[i])
+    {i++;}
+  char** d = realloc(dataValStrs, (dataValStrInd + 1) * sizeof(char*));
+  d[dataValStrInd] = calloc(i, sizeof(char));
+  strcpy(d[dataValStrInd], form);
+  dataValidations[dataValidationIndex].value_formula = d[dataValStrInd++];
+  dataValStrs = d;
 }
 
 void setValidationValueDateTime(int y,
@@ -422,10 +517,13 @@ void setValidationMinFormula(char* form)
 {
   dataValidationsBoundsCheck();
   int i=1;
-  while (form[i] != '\0')
-    {i+=1;}
-  dataValidations[dataValidationIndex].minimum_formula = malloc(i * sizeof(char));
-  strcpy(dataValidations[dataValidationIndex].minimum_formula, form);
+  while (form[i])
+    {i++;}
+  char** d = realloc(dataValStrs, (dataValStrInd + 1) * sizeof(char*));
+  d[dataValStrInd] = calloc(i, sizeof(char));
+  strcpy(d[dataValStrInd], form);
+  dataValidations[dataValidationIndex].minimum_formula = d[dataValStrInd++];
+  dataValStrs = d;
 }
 
 void setValidationMinDateTime(int y,
@@ -456,10 +554,13 @@ void setValidationMaxFormula(char* form)
 {
   dataValidationsBoundsCheck();
   int i = 1;
-  while (form[i] != '\0')
-    {i+=1;}
-  dataValidations[dataValidationIndex].maximum_formula = malloc(i * sizeof(char));
-  strcpy(dataValidations[dataValidationIndex].maximum_formula, form);
+  while (form[i])
+    {i++;}
+  char** d = realloc(dataValStrs, (dataValStrInd + 1) * sizeof(char*));
+  d[dataValStrInd] = calloc(i, sizeof(char));
+  strcpy(d[dataValStrInd], form);
+  dataValidations[dataValidationIndex].minimum_formula = d[dataValStrInd++];
+  dataValStrs = d;
 }
 
 void setValidationMaxDateTime(int y,
@@ -484,40 +585,52 @@ void setValidationInputTitle(char* title)
 {
   dataValidationsBoundsCheck();
   int i = 1;
-  while (title[i] != '\0')
-    {i+=1;}
-  dataValidations[dataValidationIndex].input_title = malloc(i * sizeof(char));
-  strcpy(dataValidations[dataValidationIndex].input_title, title);
+  while (title[i])
+    {i++;}
+  char** d = realloc(dataValStrs, (dataValStrInd + 1) * sizeof(char*));
+  d[dataValStrInd] = calloc(i, sizeof(char));
+  strcpy(d[dataValStrInd], title);
+  dataValidations[dataValidationIndex].input_title = d[dataValStrInd++];
+  dataValStrs = d;
 }
 
 void setValidationInputMessage(char* message)
 {
   dataValidationsBoundsCheck();
   int i = 1;
-  while (message[i] != '\0')
-    {i+=1;}
-  dataValidations[dataValidationIndex].input_message = malloc(i * sizeof(char));
-  strcpy(dataValidations[dataValidationIndex].input_message, message);
+  while (message[i])
+    {i++;}
+  char** d = realloc(dataValStrs, (dataValStrInd + 1) * sizeof(char*));
+  d[dataValStrInd] = calloc(i, sizeof(char));
+  strcpy(d[dataValStrInd], message);
+  dataValidations[dataValidationIndex].input_message = d[dataValStrInd++];
+  dataValStrs = d;
 }
 
 void setValidationErrorTitle(char* title)
 {
   dataValidationsBoundsCheck();
   int i = 1;
-  while (title[i] != '\0')
-    {i+=1;}
-  dataValidations[dataValidationIndex].error_title = malloc(i * sizeof(char));
-  strcpy(dataValidations[dataValidationIndex].error_title, title);
+  while (title[i])
+    {i++;}
+  char** d = realloc(dataValStrs, (dataValStrInd + 1) * sizeof(char*));
+  d[dataValStrInd] = calloc(i, sizeof(char));
+  strcpy(d[dataValStrInd], title);
+  dataValidations[dataValidationIndex].error_title = d[dataValStrInd++];
+  dataValStrs = d;
 }
 
 void setValidationErrorMessage(char* message)
 {
   dataValidationsBoundsCheck();
   int i = 1;
-  while (message[i] != '\0')
-    {i+=1;}
-  dataValidations[dataValidationIndex].error_message = malloc(i * sizeof(char));
-  strcpy(dataValidations[dataValidationIndex].error_message, message);
+  while (message[i])
+    {i++;}
+  char** d = realloc(dataValStrs, (dataValStrInd + 1) * sizeof(char*));
+  d[dataValStrInd] = calloc(i, sizeof(char));
+  strcpy(d[dataValStrInd], message);
+  dataValidations[dataValidationIndex].error_message = d[dataValStrInd++];
+  dataValStrs = d;
 }
 
 void setValidationValueList()
@@ -806,8 +919,8 @@ void addWorksheet(char* worksheetName)
   if (workbook)
     {
       int i = 0;
-      while (worksheetName[i] != '\0')
-	{i+=1;}
+      while (worksheetName[i])
+	{i++;}
       if (i == 0)
 	{worksheet = workbook_add_worksheet(workbook, NULL);}
       else
@@ -1673,7 +1786,7 @@ void createChartSeries(char* categories, char* vals)
     }
   char* c = NULL;
   int i=0;
-  while (categories[i] != '\0')
+  while (categories[i])
     {i++;}
   if (i)
     {c = categories;}
@@ -2952,9 +3065,9 @@ void createRichStringFragment(char* stringChunk)
       richStringFragmentCount < maxAllowedRichStringFragments)
     {
       int i = 1;
-      while (stringChunk[i] != '\0')
-	{i+=1;}
-      *(rsFragmentStrings + richStringFragmentCount) = malloc(i * sizeof(char));
+      while (stringChunk[i])
+	{i++;}
+      rsFragmentStrings[richStringFragmentCount] = calloc(i,sizeof(char));
       strcpy(rsFragmentStrings[richStringFragmentCount], stringChunk);
       lxw_format* f = NULL;
       if (formats)
@@ -2980,11 +3093,23 @@ void richStringCleanup()
 void richStringListCleanup()
 {
   if (richStringList)
-    {free(richStringList);}
-  for (int i = 0; i<richStringCount; i++)
-    {free(rsFragmentStrings[i]);}
+    {
+      free(richStringList);
+      richStringList = NULL;
+    }
+  for (int i = 0; i<richStringFragmentCount; i++)
+    {
+      if(rsFragmentStrings[i])
+	{
+	  free(rsFragmentStrings[i]);
+	  rsFragmentStrings[i] = NULL;
+	}
+    }
   if (rsFragmentStrings)
-    {free(rsFragmentStrings);}
+    {
+      free(rsFragmentStrings);
+      rsFragmentStrings = NULL;
+    }
   richStringCount = 0;
   maxAllowedRichStrings = 0;
 }

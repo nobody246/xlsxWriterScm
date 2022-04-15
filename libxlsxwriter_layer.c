@@ -14,7 +14,7 @@ void createWorkbookConstantMemory(char* workbookName)
 
 void resizeDataValidations()
 {
-  lxw_data_validation* v = malloc(dataValidationCount * sizeof(lxw_data_validation));
+  lxw_data_validation* v = NULL;
   v = realloc(dataValidations, dataValidationCount * sizeof(lxw_data_validation));
   if (!v)
     {
@@ -23,7 +23,7 @@ void resizeDataValidations()
     }
   dataValidations = v;
 
-  char*** d = malloc(dataValidationCount * sizeof(char**));
+  char*** d = NULL;
   //127 total possible list entries, 255 character count which includes commas
   d = realloc(dataValidationList, dataValidationCount * sizeof(char**) * 255 * 127);
   if (!d)
@@ -39,7 +39,7 @@ void resizeDataValidations()
       *(dataValidationList + dataValidationCount + x) = calloc(255, sizeof(char));
     }
       
-  ptrdiff_t* h = malloc(dataValidationCount * sizeof(ptrdiff_t));
+  ptrdiff_t* h = NULL;
   h = realloc(dataValidationListCharCount, dataValidationCount * sizeof(ptrdiff_t));
   if (!h)
     {
@@ -48,7 +48,8 @@ void resizeDataValidations()
     }
   dataValidationListCharCount = h;
 
-  ptrdiff_t* y = realloc(dataValidationListStrIndex, dataValidationCount * sizeof(ptrdiff_t));
+  ptrdiff_t* y = NULL;
+  y = realloc(dataValidationListStrIndex, dataValidationCount * sizeof(ptrdiff_t));
   if (!y)
     {
       printf("error: There was problem allocating data-validation-list-str-index space in create-data-validation.\n");
@@ -698,7 +699,7 @@ void addToRowNumberList(uint32_t val)
     {initRowNumbers(1);}
   if (rowNumberCount >= maxAllowedRowNumbers)
     {
-      lxw_row_t* d = malloc(rowNumberCount * sizeof(lxw_row_t));
+      lxw_row_t* d = NULL;//malloc(rowNumberCount * sizeof(lxw_row_t));
       d = realloc(rowNumbers, rowNumberCount * sizeof(lxw_row_t));
       if (!d)
 	{
@@ -719,7 +720,7 @@ void addToColNumberList(unsigned short val)
     {initColNumbers(1);}
   if (colNumberCount >= maxAllowedColNumbers)
     {
-      lxw_col_t* d = malloc(colNumberCount * sizeof(lxw_col_t));
+      lxw_col_t* d = NULL; //malloc(colNumberCount * sizeof(lxw_col_t));
       d = realloc(colNumbers, colNumberCount * sizeof(lxw_col_t));
       if (!d)
 	{
@@ -1634,8 +1635,8 @@ void createChart(unsigned short chartType)
       size_t s = chartCount *
 	sizeof(lxw_chart*) *
         sizeof(lxw_chart);
-      lxw_chart** d = malloc(s);
-      d = realloc(charts, s);
+      lxw_chart** d = NULL;
+      d = realloc(charts, s * sizeof(lxw_chart*));
       if (!d)
 	{
 	  printf("error: problem allocating more charts in create-chart");
@@ -1662,7 +1663,7 @@ void createChartSeries(char* categories, char* vals)
     {initSeries(1);}
   if (seriesCount >= maxAllowedSeries)
     {
-      lxw_chart_series** d = malloc(seriesCount * sizeof(lxw_chart_series*) * sizeof(lxw_chart_series));
+      lxw_chart_series** d = NULL;
       d = realloc(series, seriesCount * sizeof(lxw_chart_series*)  * sizeof(lxw_chart_series));
       if (!d)
 	{
@@ -1691,7 +1692,7 @@ void createRowColOpt(unsigned short level,
     {initColOptions(1);}
   if (colOptionCount >= maxAllowedColOptions)
     {
-      lxw_row_col_options* d = malloc(colOptionCount * sizeof(lxw_row_col_options));
+      lxw_row_col_options* d = NULL; 
       d = realloc(colOptions, colOptionCount * sizeof(lxw_row_col_options));
       if (!d)
 	{
@@ -3008,7 +3009,7 @@ void worksheetWriteRichStringFragments()
   if (richStringCount >= maxAllowedRichStrings)
     {
       int c = richStringCount + 1;
-      lxw_rich_string_tuple*** r = malloc(c * sizeof(lxw_rich_string_tuple**));
+      lxw_rich_string_tuple*** r = NULL; 
       r = realloc(richStringList, c * sizeof(lxw_rich_string_tuple**));
       if (!r)
 	{

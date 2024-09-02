@@ -69,12 +69,12 @@
           (when (not (null? y))
             (for-each
              (lambda(a)
-               (if(memq
+               (if (memq
                    (car a)
                    allowed-format-definition-functions)
-                  (eval a)
-                  (print (car a)
-                         " is not a valid format function.")))
+                   (eval a)
+                   (print (car a)
+                          " is not a valid format function.")))
              (car y)))
           (d (cddr x)))))
     (define (e x)

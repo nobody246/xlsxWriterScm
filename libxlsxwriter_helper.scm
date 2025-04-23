@@ -1,4 +1,4 @@
-;(c) xlsxWriterScm 2019-2025 Alexander Semotan
+;xlsxWriterScm (c) 2019-2025 Alexander Semotan
 ; Released under the BSD 2 Software License 
 (define user-formats '())
 (define data-validations '())

@@ -1,4 +1,4 @@
-// (c) xlsxWriterScm 2019-2025 Alexander Semotan
+// xlsxWriterScm (c) 2019-2025 Alexander Semotan
 // BSD2 Software License
 void createWorkbook(char* workbookName)
 {

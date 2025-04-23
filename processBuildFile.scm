@@ -1,3 +1,5 @@
+;(c) xlsxWriterScm 2019-2025 Alexander Semotan
+; Released under the BSD 2 Software License 
 (use posix s)
 
 (define project-header #<#EOF

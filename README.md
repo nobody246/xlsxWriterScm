@@ -18,3 +18,8 @@ The c dependencies are: libz, libxslxwriter c libraries.
 Basic functionality seems good to go but I still find things to fix continuously, For reference check the /tests folder for examples as well as the documentation of libxlsxwriter https://libxlsxwriter.github.io/.
 
 This is released under same license as libxlsxwriter (BSD).
+
+
+# FYI
+
+When I updated Libxlsxwriter and rebuilt xlsxWriterScm I had to run ldconfig to get everything to run. You may or may not run into this issue, I'm not sure why it happened.

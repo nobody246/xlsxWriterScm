@@ -28,7 +28,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ==============================================================================================
 The following is the licensing information for Libxlsxwriter (c) John McNamara, which is the library 
-that xlsxWriterScm wraps and redistributes in modified form:
+that xlsxWriterScm wraps and redistributes (in part) in modified form:
 
 
 /**

@@ -1,4 +1,5 @@
-
+// (c) xlsxWriterScm 2019-2025 Alexander Semotan
+// BSD2 Software License
 void createWorkbook(char* workbookName)
 {
   workbook = workbook_new(workbookName);
